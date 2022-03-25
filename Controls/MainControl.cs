@@ -1,6 +1,8 @@
 ﻿using McTools.Xrm.Connection;
+using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
+using Microsoft.Xrm.Sdk.Metadata;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,67 +18,24 @@ namespace Quick_Translator
 {
     public partial class MainControl : PluginControlBase
     {
-        private Settings mySettings;
+        #region variables
 
+        private Settings mySettings;
+        private List<int> lcIdList;
+
+        #endregion variables
+
+        #region Constructor 
         public MainControl()
         {
             InitializeComponent();
         }
 
-        private void PluginControl_Load(object sender, EventArgs e)
-        {
-            ShowInfoNotification("This is a notification that can lead to XrmToolBox repository", new Uri("https://github.com/MscrmTools/XrmToolBox"));
-
-            // Loads or creates the settings for the plugin
-            if (!SettingsManager.Instance.TryLoad(GetType(), out mySettings))
-            {
-                mySettings = new Settings();
-
-                LogWarning("Settings not found => a new settings file has been created!");
-            }
-            else
-            {
-                LogInfo("Settings found and loaded");
-            }
-        }
+        #endregion Constructor
 
         private void tsbClose_Click(object sender, EventArgs e)
         {
             CloseTool();
-        }
-
-        private void tsbSample_Click(object sender, EventArgs e)
-        {
-            // The ExecuteMethod method handles connecting to an
-            // organization if XrmToolBox is not yet connected
-            ExecuteMethod(GetAccounts);
-        }
-
-        private void GetAccounts()
-        {
-            WorkAsync(new WorkAsyncInfo
-            {
-                Message = "Getting accounts",
-                Work = (worker, args) =>
-                {
-                    args.Result = Service.RetrieveMultiple(new QueryExpression("account")
-                    {
-                        TopCount = 50
-                    });
-                },
-                PostWorkCallBack = (args) =>
-                {
-                    if (args.Error != null)
-                    {
-                        MessageBox.Show(args.Error.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    var result = args.Result as EntityCollection;
-                    if (result != null)
-                    {
-                        MessageBox.Show($"Found {result.Entities.Count} accounts");
-                    }
-                }
-            });
         }
 
         /// <summary>
@@ -102,6 +61,57 @@ namespace Quick_Translator
                 mySettings.LastUsedOrganizationWebappUrl = detail.WebApplicationUrl;
                 LogInfo("Connection has changed to: {0}", detail.WebApplicationUrl);
             }
+        }
+
+        private void btnLoadEntities_Click(object sender, EventArgs e)
+        {
+            LoadEntities();
+        }
+
+        private void LoadEntities()
+        {
+            if (lvEntities.Items.Count > 0)
+                lvEntities.Items.Clear();
+
+            bool loadCustomEntities = cbCustomEntities.Checked;
+            bool loadDefaultEntities = cbDefaultEntities.Checked;
+
+            if (!loadCustomEntities && !loadDefaultEntities) return;
+
+            WorkAsync(new WorkAsyncInfo
+            {
+                Message = "Loading entities...",
+                Work = (bw, e) =>
+                {
+                    var lcIdRequest = new RetrieveProvisionedLanguagesRequest();
+                    var lcIdResponse = (RetrieveProvisionedLanguagesResponse)Service.Execute(lcIdRequest);
+                    lcIdList = lcIdResponse.RetrieveProvisionedLanguages.ToList();
+
+                    if (loadCustomEntities && loadDefaultEntities)
+                        e.Result = MetadataHelper.RetrieveAllEntities(Service);
+                    else if (loadCustomEntities)
+                        e.Result = MetadataHelper.RetrieveCustomEntities(Service);
+                    else
+                        e.Result = MetadataHelper.RetrieveDefaultEntities(Service);
+                },
+                PostWorkCallBack = e =>
+                {
+                    if(e.Error != null)
+                    {
+                        string errorMessage = CrmExceptionHelper.GetErrorMessage(e.Error, true);
+                        MessageBox.Show(this, errorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else
+                    {
+                        foreach (EntityMetadata entityMetadata in (List<EntityMetadata>)e.Result)
+                        {
+                            var item = new ListViewItem { Text = entityMetadata.LogicalName, Tag = e };
+                            item.SubItems.Add(entityMetadata.DisplayName?.UserLocalizedLabel?.Label);
+                            lvEntities.Items.Add(item);
+                        }
+                    }
+                }
+            });
         }
     }
 }

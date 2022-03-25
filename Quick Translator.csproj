@@ -209,6 +209,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\MetadataHelper.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Controls\MainControl.cs">
       <SubType>UserControl</SubType>
