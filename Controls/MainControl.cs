@@ -22,6 +22,7 @@ namespace Quick_Translator
 
         private Settings mySettings;
         private List<int> lcIdList;
+        private List<EntityMetadata> entityMetadataList;
 
         #endregion variables
 
@@ -103,15 +104,34 @@ namespace Quick_Translator
                     }
                     else
                     {
-                        foreach (EntityMetadata entityMetadata in (List<EntityMetadata>)e.Result)
-                        {
-                            var item = new ListViewItem { Text = entityMetadata.LogicalName, Tag = e };
-                            item.SubItems.Add(entityMetadata.DisplayName?.UserLocalizedLabel?.Label);
-                            lvEntities.Items.Add(item);
-                        }
+                        entityMetadataList = (List<EntityMetadata>)e.Result;
+                        FillEntitiesListView(entityMetadataList);
                     }
                 }
             });
+        }
+
+        private void FillEntitiesListView(List<EntityMetadata> entityMetadatas)
+        {
+            foreach (EntityMetadata entityMetadata in entityMetadatas)
+            {
+                var item = new ListViewItem { Text = entityMetadata.LogicalName, Tag = entityMetadata };
+                item.SubItems.Add(entityMetadata.DisplayName?.UserLocalizedLabel?.Label);
+                lvEntities.Items.Add(item);
+            }
+        }
+
+        private void tbFind_KeyUp(object sender, KeyEventArgs e)
+        {
+            lvEntities.Items.Clear();
+
+            if (string.IsNullOrEmpty(tbFind.Text))
+            {
+                FillEntitiesListView(entityMetadataList);
+            }
+
+            var filteredList = entityMetadataList.Where(prm => prm.LogicalName.Contains(tbFind.Text)).ToList();
+            FillEntitiesListView(filteredList);
         }
     }
 }

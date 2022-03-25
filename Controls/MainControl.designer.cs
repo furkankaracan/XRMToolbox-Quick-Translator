@@ -122,6 +122,7 @@ namespace Quick_Translator
             this.tbFind.Size = new System.Drawing.Size(174, 20);
             this.tbFind.TabIndex = 6;
             this.tbFind.WordWrap = false;
+            this.tbFind.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbFind_KeyUp);
             // 
             // lblFind
             // 
@@ -428,7 +429,6 @@ namespace Quick_Translator
             this.Controls.Add(this.toolStripMenu);
             this.Name = "MainControl";
             this.Size = new System.Drawing.Size(960, 623);
-            //this.Load += new System.EventHandler(this.PluginControl_Load);
             this.toolStripMenu.ResumeLayout(false);
             this.toolStripMenu.PerformLayout();
             this.gbSelectEntity.ResumeLayout(false);
