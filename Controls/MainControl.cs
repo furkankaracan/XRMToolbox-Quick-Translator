@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using XrmToolBox.Extensibility;
+using Microsoft.Xrm.Sdk.Messages;
 
 namespace Quick_Translator
 {
@@ -97,7 +98,7 @@ namespace Quick_Translator
                 },
                 PostWorkCallBack = e =>
                 {
-                    if(e.Error != null)
+                    if (e.Error != null)
                     {
                         string errorMessage = CrmExceptionHelper.GetErrorMessage(e.Error, true);
                         MessageBox.Show(this, errorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -115,7 +116,7 @@ namespace Quick_Translator
         {
             foreach (EntityMetadata entityMetadata in entityMetadatas)
             {
-                var item = new ListViewItem { Text = entityMetadata.LogicalName, Tag = entityMetadata };
+                var item = new ListViewItem { Text = entityMetadata.LogicalName };
                 item.SubItems.Add(entityMetadata.DisplayName?.UserLocalizedLabel?.Label);
                 lvEntities.Items.Add(item);
             }
@@ -132,6 +133,66 @@ namespace Quick_Translator
 
             var filteredList = entityMetadataList.Where(prm => prm.LogicalName.Contains(tbFind.Text)).ToList();
             FillEntitiesListView(filteredList);
+        }
+
+        private void lvEntities_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lvEntities.SelectedIndices.Count <= 0) return;
+
+            LoadEntityMetada();
+        }
+
+        private void tcSelectedEntityTabs_TabIndexChanged(object sender, EventArgs e)
+        {
+            LoadEntityMetada();
+        }
+
+        private void LoadEntityMetada()
+        {
+            int selectedIndex = lvEntities.SelectedIndices[0];
+            var filters = EntityFilters.Default;
+
+            if (tcSelectedEntityTabs.SelectedIndex == (int)TabEnum.Form || tcSelectedEntityTabs.SelectedIndex == (int)TabEnum.Views)
+                filters = EntityFilters.Entity;
+
+            else if (tcSelectedEntityTabs.SelectedIndex == (int)TabEnum.Attributes
+                || tcSelectedEntityTabs.SelectedIndex == (int)TabEnum.Picklists
+                || tcSelectedEntityTabs.SelectedIndex == (int)TabEnum.Booleans)
+                filters = EntityFilters.Attributes;
+
+            var request = new RetrieveEntityRequest
+            {
+                LogicalName = lvEntities.Items[selectedIndex].Text,
+                EntityFilters = filters
+            };
+
+            var response = (RetrieveEntityResponse)Service.Execute(request);
+
+
+        }
+
+        private void MainControl_Load(object sender, EventArgs e)
+        {
+            AddLanguageColumns();
+        }
+
+        private void AddLanguageColumns()
+        {
+            RetrieveAvailableLanguagesRequest req = new RetrieveAvailableLanguagesRequest();
+            var resp = (RetrieveAvailableLanguagesResponse)Service.Execute(req);
+            var lcIds = (int[])resp.Results["LocaleIds"];
+
+            foreach (int lcid in lcIds)
+            {
+                string languageLabel = LanguageCodeHelper.GetLanguageLabelByLCID(lcid);
+
+                ListViewHelper.AddColumn(lvAttributes, languageLabel, 150);
+                ListViewHelper.AddColumn(lvForms, languageLabel, 150);
+                ListViewHelper.AddColumn(lvFormFields, languageLabel, 150);
+                ListViewHelper.AddColumn(lvViews, languageLabel, 150);
+                ListViewHelper.AddColumn(lvBooleans, languageLabel, 150);
+                ListViewHelper.AddColumn(lvPicklists, languageLabel, 150);
+            }
         }
     }
 }

@@ -47,19 +47,19 @@ namespace Quick_Translator
             this.lvAttributes = new System.Windows.Forms.ListView();
             this.attrLogicalName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Forms = new System.Windows.Forms.TabPage();
-            this.listView2 = new System.Windows.Forms.ListView();
+            this.lvForms = new System.Windows.Forms.ListView();
             this.formLogicalName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tpFormFields = new System.Windows.Forms.TabPage();
-            this.listView3 = new System.Windows.Forms.ListView();
+            this.lvFormFields = new System.Windows.Forms.ListView();
             this.formFieldLogicalName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tpViews = new System.Windows.Forms.TabPage();
-            this.listView4 = new System.Windows.Forms.ListView();
+            this.lvViews = new System.Windows.Forms.ListView();
             this.viewLogicalName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tpBooleans = new System.Windows.Forms.TabPage();
-            this.listView5 = new System.Windows.Forms.ListView();
+            this.lvBooleans = new System.Windows.Forms.ListView();
             this.boolLogicalName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tpPicklists = new System.Windows.Forms.TabPage();
-            this.listView6 = new System.Windows.Forms.ListView();
+            this.lvPicklists = new System.Windows.Forms.ListView();
             this.picklistLogicalName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.toolStripMenu.SuspendLayout();
             this.gbSelectEntity.SuspendLayout();
@@ -194,6 +194,7 @@ namespace Quick_Translator
             this.lvEntities.TabStop = false;
             this.lvEntities.UseCompatibleStateImageBehavior = false;
             this.lvEntities.View = System.Windows.Forms.View.Details;
+            this.lvEntities.SelectedIndexChanged += new System.EventHandler(this.lvEntities_SelectedIndexChanged);
             // 
             // logicalName
             // 
@@ -232,6 +233,7 @@ namespace Quick_Translator
             this.tcSelectedEntityTabs.SelectedIndex = 0;
             this.tcSelectedEntityTabs.Size = new System.Drawing.Size(661, 553);
             this.tcSelectedEntityTabs.TabIndex = 0;
+            this.tcSelectedEntityTabs.TabIndexChanged += new System.EventHandler(this.tcSelectedEntityTabs_TabIndexChanged);
             // 
             // tpAttributes
             // 
@@ -268,7 +270,7 @@ namespace Quick_Translator
             // Forms
             // 
             this.Forms.BackColor = System.Drawing.SystemColors.Control;
-            this.Forms.Controls.Add(this.listView2);
+            this.Forms.Controls.Add(this.lvForms);
             this.Forms.Location = new System.Drawing.Point(4, 25);
             this.Forms.Margin = new System.Windows.Forms.Padding(2);
             this.Forms.Name = "Forms";
@@ -277,19 +279,19 @@ namespace Quick_Translator
             this.Forms.TabIndex = 1;
             this.Forms.Text = "Forms";
             // 
-            // listView2
+            // lvForms
             // 
-            this.listView2.BackColor = System.Drawing.SystemColors.Control;
-            this.listView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.lvForms.BackColor = System.Drawing.SystemColors.Control;
+            this.lvForms.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.formLogicalName});
-            this.listView2.HideSelection = false;
-            this.listView2.Location = new System.Drawing.Point(4, 4);
-            this.listView2.Margin = new System.Windows.Forms.Padding(2);
-            this.listView2.Name = "listView2";
-            this.listView2.Size = new System.Drawing.Size(645, 516);
-            this.listView2.TabIndex = 0;
-            this.listView2.UseCompatibleStateImageBehavior = false;
-            this.listView2.View = System.Windows.Forms.View.Details;
+            this.lvForms.HideSelection = false;
+            this.lvForms.Location = new System.Drawing.Point(4, 4);
+            this.lvForms.Margin = new System.Windows.Forms.Padding(2);
+            this.lvForms.Name = "lvForms";
+            this.lvForms.Size = new System.Drawing.Size(645, 516);
+            this.lvForms.TabIndex = 0;
+            this.lvForms.UseCompatibleStateImageBehavior = false;
+            this.lvForms.View = System.Windows.Forms.View.Details;
             // 
             // formLogicalName
             // 
@@ -299,7 +301,7 @@ namespace Quick_Translator
             // tpFormFields
             // 
             this.tpFormFields.BackColor = System.Drawing.SystemColors.Control;
-            this.tpFormFields.Controls.Add(this.listView3);
+            this.tpFormFields.Controls.Add(this.lvFormFields);
             this.tpFormFields.Location = new System.Drawing.Point(4, 25);
             this.tpFormFields.Margin = new System.Windows.Forms.Padding(2);
             this.tpFormFields.Name = "tpFormFields";
@@ -308,19 +310,19 @@ namespace Quick_Translator
             this.tpFormFields.TabIndex = 2;
             this.tpFormFields.Text = "Form Fields";
             // 
-            // listView3
+            // lvFormFields
             // 
-            this.listView3.BackColor = System.Drawing.SystemColors.Control;
-            this.listView3.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.lvFormFields.BackColor = System.Drawing.SystemColors.Control;
+            this.lvFormFields.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.formFieldLogicalName});
-            this.listView3.HideSelection = false;
-            this.listView3.Location = new System.Drawing.Point(4, 4);
-            this.listView3.Margin = new System.Windows.Forms.Padding(2);
-            this.listView3.Name = "listView3";
-            this.listView3.Size = new System.Drawing.Size(645, 516);
-            this.listView3.TabIndex = 0;
-            this.listView3.UseCompatibleStateImageBehavior = false;
-            this.listView3.View = System.Windows.Forms.View.Details;
+            this.lvFormFields.HideSelection = false;
+            this.lvFormFields.Location = new System.Drawing.Point(4, 4);
+            this.lvFormFields.Margin = new System.Windows.Forms.Padding(2);
+            this.lvFormFields.Name = "lvFormFields";
+            this.lvFormFields.Size = new System.Drawing.Size(645, 516);
+            this.lvFormFields.TabIndex = 0;
+            this.lvFormFields.UseCompatibleStateImageBehavior = false;
+            this.lvFormFields.View = System.Windows.Forms.View.Details;
             // 
             // formFieldLogicalName
             // 
@@ -330,7 +332,7 @@ namespace Quick_Translator
             // tpViews
             // 
             this.tpViews.BackColor = System.Drawing.SystemColors.Control;
-            this.tpViews.Controls.Add(this.listView4);
+            this.tpViews.Controls.Add(this.lvViews);
             this.tpViews.Location = new System.Drawing.Point(4, 25);
             this.tpViews.Margin = new System.Windows.Forms.Padding(2);
             this.tpViews.Name = "tpViews";
@@ -339,19 +341,19 @@ namespace Quick_Translator
             this.tpViews.TabIndex = 3;
             this.tpViews.Text = "Views";
             // 
-            // listView4
+            // lvViews
             // 
-            this.listView4.BackColor = System.Drawing.SystemColors.Control;
-            this.listView4.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.lvViews.BackColor = System.Drawing.SystemColors.Control;
+            this.lvViews.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.viewLogicalName});
-            this.listView4.HideSelection = false;
-            this.listView4.Location = new System.Drawing.Point(4, 4);
-            this.listView4.Margin = new System.Windows.Forms.Padding(2);
-            this.listView4.Name = "listView4";
-            this.listView4.Size = new System.Drawing.Size(645, 516);
-            this.listView4.TabIndex = 0;
-            this.listView4.UseCompatibleStateImageBehavior = false;
-            this.listView4.View = System.Windows.Forms.View.Details;
+            this.lvViews.HideSelection = false;
+            this.lvViews.Location = new System.Drawing.Point(4, 4);
+            this.lvViews.Margin = new System.Windows.Forms.Padding(2);
+            this.lvViews.Name = "lvViews";
+            this.lvViews.Size = new System.Drawing.Size(645, 516);
+            this.lvViews.TabIndex = 0;
+            this.lvViews.UseCompatibleStateImageBehavior = false;
+            this.lvViews.View = System.Windows.Forms.View.Details;
             // 
             // viewLogicalName
             // 
@@ -361,7 +363,7 @@ namespace Quick_Translator
             // tpBooleans
             // 
             this.tpBooleans.BackColor = System.Drawing.SystemColors.Control;
-            this.tpBooleans.Controls.Add(this.listView5);
+            this.tpBooleans.Controls.Add(this.lvBooleans);
             this.tpBooleans.Location = new System.Drawing.Point(4, 25);
             this.tpBooleans.Margin = new System.Windows.Forms.Padding(2);
             this.tpBooleans.Name = "tpBooleans";
@@ -370,19 +372,19 @@ namespace Quick_Translator
             this.tpBooleans.TabIndex = 4;
             this.tpBooleans.Text = "Booleans";
             // 
-            // listView5
+            // lvBooleans
             // 
-            this.listView5.BackColor = System.Drawing.SystemColors.Control;
-            this.listView5.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.lvBooleans.BackColor = System.Drawing.SystemColors.Control;
+            this.lvBooleans.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.boolLogicalName});
-            this.listView5.HideSelection = false;
-            this.listView5.Location = new System.Drawing.Point(4, 4);
-            this.listView5.Margin = new System.Windows.Forms.Padding(2);
-            this.listView5.Name = "listView5";
-            this.listView5.Size = new System.Drawing.Size(645, 516);
-            this.listView5.TabIndex = 0;
-            this.listView5.UseCompatibleStateImageBehavior = false;
-            this.listView5.View = System.Windows.Forms.View.Details;
+            this.lvBooleans.HideSelection = false;
+            this.lvBooleans.Location = new System.Drawing.Point(4, 4);
+            this.lvBooleans.Margin = new System.Windows.Forms.Padding(2);
+            this.lvBooleans.Name = "lvBooleans";
+            this.lvBooleans.Size = new System.Drawing.Size(645, 516);
+            this.lvBooleans.TabIndex = 0;
+            this.lvBooleans.UseCompatibleStateImageBehavior = false;
+            this.lvBooleans.View = System.Windows.Forms.View.Details;
             // 
             // boolLogicalName
             // 
@@ -392,7 +394,7 @@ namespace Quick_Translator
             // tpPicklists
             // 
             this.tpPicklists.BackColor = System.Drawing.SystemColors.Control;
-            this.tpPicklists.Controls.Add(this.listView6);
+            this.tpPicklists.Controls.Add(this.lvPicklists);
             this.tpPicklists.Location = new System.Drawing.Point(4, 25);
             this.tpPicklists.Margin = new System.Windows.Forms.Padding(2);
             this.tpPicklists.Name = "tpPicklists";
@@ -401,19 +403,19 @@ namespace Quick_Translator
             this.tpPicklists.TabIndex = 5;
             this.tpPicklists.Text = "Picklists";
             // 
-            // listView6
+            // lvPicklists
             // 
-            this.listView6.BackColor = System.Drawing.SystemColors.Control;
-            this.listView6.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.lvPicklists.BackColor = System.Drawing.SystemColors.Control;
+            this.lvPicklists.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.picklistLogicalName});
-            this.listView6.HideSelection = false;
-            this.listView6.Location = new System.Drawing.Point(4, 4);
-            this.listView6.Margin = new System.Windows.Forms.Padding(2);
-            this.listView6.Name = "listView6";
-            this.listView6.Size = new System.Drawing.Size(645, 516);
-            this.listView6.TabIndex = 0;
-            this.listView6.UseCompatibleStateImageBehavior = false;
-            this.listView6.View = System.Windows.Forms.View.Details;
+            this.lvPicklists.HideSelection = false;
+            this.lvPicklists.Location = new System.Drawing.Point(4, 4);
+            this.lvPicklists.Margin = new System.Windows.Forms.Padding(2);
+            this.lvPicklists.Name = "lvPicklists";
+            this.lvPicklists.Size = new System.Drawing.Size(645, 516);
+            this.lvPicklists.TabIndex = 0;
+            this.lvPicklists.UseCompatibleStateImageBehavior = false;
+            this.lvPicklists.View = System.Windows.Forms.View.Details;
             // 
             // picklistLogicalName
             // 
@@ -429,6 +431,7 @@ namespace Quick_Translator
             this.Controls.Add(this.toolStripMenu);
             this.Name = "MainControl";
             this.Size = new System.Drawing.Size(960, 623);
+            this.Load += new System.EventHandler(this.MainControl_Load);
             this.toolStripMenu.ResumeLayout(false);
             this.toolStripMenu.PerformLayout();
             this.gbSelectEntity.ResumeLayout(false);
@@ -468,11 +471,11 @@ namespace Quick_Translator
         private System.Windows.Forms.TabPage tpPicklists;
         private System.Windows.Forms.ListView lvAttributes;
         private System.Windows.Forms.ColumnHeader attrLogicalName;
-        private System.Windows.Forms.ListView listView2;
-        private System.Windows.Forms.ListView listView3;
-        private System.Windows.Forms.ListView listView4;
-        private System.Windows.Forms.ListView listView5;
-        private System.Windows.Forms.ListView listView6;
+        private System.Windows.Forms.ListView lvForms;
+        private System.Windows.Forms.ListView lvFormFields;
+        private System.Windows.Forms.ListView lvViews;
+        private System.Windows.Forms.ListView lvBooleans;
+        private System.Windows.Forms.ListView lvPicklists;
         private System.Windows.Forms.Button btnLoadEntities;
         private System.Windows.Forms.ColumnHeader formLogicalName;
         private System.Windows.Forms.ColumnHeader formFieldLogicalName;

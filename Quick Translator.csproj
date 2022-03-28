@@ -209,7 +209,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\LanguageCodeHelper.cs" />
+    <Compile Include="Helpers\ListViewHelper.cs" />
     <Compile Include="Helpers\MetadataHelper.cs" />
+    <Compile Include="Helpers\TabEnum.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Controls\MainControl.cs">
       <SubType>UserControl</SubType>
