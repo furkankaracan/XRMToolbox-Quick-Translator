@@ -44,23 +44,22 @@ namespace Quick_Translator
             this.gbSelectedEntity = new System.Windows.Forms.GroupBox();
             this.tcSelectedEntityTabs = new System.Windows.Forms.TabControl();
             this.tpAttributes = new System.Windows.Forms.TabPage();
-            this.lvAttributes = new System.Windows.Forms.ListView();
-            this.attrLogicalName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Forms = new System.Windows.Forms.TabPage();
-            this.lvForms = new System.Windows.Forms.ListView();
-            this.formLogicalName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tpFormFields = new System.Windows.Forms.TabPage();
-            this.lvFormFields = new System.Windows.Forms.ListView();
-            this.formFieldLogicalName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tpViews = new System.Windows.Forms.TabPage();
-            this.lvViews = new System.Windows.Forms.ListView();
-            this.viewLogicalName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tpBooleans = new System.Windows.Forms.TabPage();
-            this.lvBooleans = new System.Windows.Forms.ListView();
-            this.boolLogicalName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tpPicklists = new System.Windows.Forms.TabPage();
-            this.lvPicklists = new System.Windows.Forms.ListView();
-            this.picklistLogicalName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.dgvAttributes = new System.Windows.Forms.DataGridView();
+            this.dgvForms = new System.Windows.Forms.DataGridView();
+            this.attrLogicalName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvFormFields = new System.Windows.Forms.DataGridView();
+            this.dgvViews = new System.Windows.Forms.DataGridView();
+            this.dgvBooleans = new System.Windows.Forms.DataGridView();
+            this.dgvPicklists = new System.Windows.Forms.DataGridView();
+            this.boolLogicalName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.picklistLogicalName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.viewsLogicalName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.formFieldsLogicalName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStripMenu.SuspendLayout();
             this.gbSelectEntity.SuspendLayout();
             this.gbSelectedEntity.SuspendLayout();
@@ -71,6 +70,12 @@ namespace Quick_Translator
             this.tpViews.SuspendLayout();
             this.tpBooleans.SuspendLayout();
             this.tpPicklists.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvAttributes)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvForms)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvFormFields)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvViews)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvBooleans)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvPicklists)).BeginInit();
             this.SuspendLayout();
             // 
             // toolStripMenu
@@ -233,12 +238,13 @@ namespace Quick_Translator
             this.tcSelectedEntityTabs.SelectedIndex = 0;
             this.tcSelectedEntityTabs.Size = new System.Drawing.Size(661, 553);
             this.tcSelectedEntityTabs.TabIndex = 0;
+            this.tcSelectedEntityTabs.SelectedIndexChanged += new System.EventHandler(this.tcSelectedEntityTabs_TabIndexChanged);
             this.tcSelectedEntityTabs.TabIndexChanged += new System.EventHandler(this.tcSelectedEntityTabs_TabIndexChanged);
             // 
             // tpAttributes
             // 
             this.tpAttributes.BackColor = System.Drawing.SystemColors.Control;
-            this.tpAttributes.Controls.Add(this.lvAttributes);
+            this.tpAttributes.Controls.Add(this.dgvAttributes);
             this.tpAttributes.Location = new System.Drawing.Point(4, 25);
             this.tpAttributes.Margin = new System.Windows.Forms.Padding(2);
             this.tpAttributes.Name = "tpAttributes";
@@ -247,30 +253,10 @@ namespace Quick_Translator
             this.tpAttributes.TabIndex = 0;
             this.tpAttributes.Text = "Attributes";
             // 
-            // lvAttributes
-            // 
-            this.lvAttributes.BackColor = System.Drawing.SystemColors.Control;
-            this.lvAttributes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.attrLogicalName});
-            this.lvAttributes.HideSelection = false;
-            this.lvAttributes.LabelEdit = true;
-            this.lvAttributes.Location = new System.Drawing.Point(4, 4);
-            this.lvAttributes.Margin = new System.Windows.Forms.Padding(2);
-            this.lvAttributes.Name = "lvAttributes";
-            this.lvAttributes.Size = new System.Drawing.Size(645, 516);
-            this.lvAttributes.TabIndex = 0;
-            this.lvAttributes.UseCompatibleStateImageBehavior = false;
-            this.lvAttributes.View = System.Windows.Forms.View.Details;
-            // 
-            // attrLogicalName
-            // 
-            this.attrLogicalName.Text = "Logical Name";
-            this.attrLogicalName.Width = 150;
-            // 
             // Forms
             // 
             this.Forms.BackColor = System.Drawing.SystemColors.Control;
-            this.Forms.Controls.Add(this.lvForms);
+            this.Forms.Controls.Add(this.dgvForms);
             this.Forms.Location = new System.Drawing.Point(4, 25);
             this.Forms.Margin = new System.Windows.Forms.Padding(2);
             this.Forms.Name = "Forms";
@@ -279,29 +265,10 @@ namespace Quick_Translator
             this.Forms.TabIndex = 1;
             this.Forms.Text = "Forms";
             // 
-            // lvForms
-            // 
-            this.lvForms.BackColor = System.Drawing.SystemColors.Control;
-            this.lvForms.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.formLogicalName});
-            this.lvForms.HideSelection = false;
-            this.lvForms.Location = new System.Drawing.Point(4, 4);
-            this.lvForms.Margin = new System.Windows.Forms.Padding(2);
-            this.lvForms.Name = "lvForms";
-            this.lvForms.Size = new System.Drawing.Size(645, 516);
-            this.lvForms.TabIndex = 0;
-            this.lvForms.UseCompatibleStateImageBehavior = false;
-            this.lvForms.View = System.Windows.Forms.View.Details;
-            // 
-            // formLogicalName
-            // 
-            this.formLogicalName.Text = "Logical Name";
-            this.formLogicalName.Width = 150;
-            // 
             // tpFormFields
             // 
             this.tpFormFields.BackColor = System.Drawing.SystemColors.Control;
-            this.tpFormFields.Controls.Add(this.lvFormFields);
+            this.tpFormFields.Controls.Add(this.dgvFormFields);
             this.tpFormFields.Location = new System.Drawing.Point(4, 25);
             this.tpFormFields.Margin = new System.Windows.Forms.Padding(2);
             this.tpFormFields.Name = "tpFormFields";
@@ -310,29 +277,10 @@ namespace Quick_Translator
             this.tpFormFields.TabIndex = 2;
             this.tpFormFields.Text = "Form Fields";
             // 
-            // lvFormFields
-            // 
-            this.lvFormFields.BackColor = System.Drawing.SystemColors.Control;
-            this.lvFormFields.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.formFieldLogicalName});
-            this.lvFormFields.HideSelection = false;
-            this.lvFormFields.Location = new System.Drawing.Point(4, 4);
-            this.lvFormFields.Margin = new System.Windows.Forms.Padding(2);
-            this.lvFormFields.Name = "lvFormFields";
-            this.lvFormFields.Size = new System.Drawing.Size(645, 516);
-            this.lvFormFields.TabIndex = 0;
-            this.lvFormFields.UseCompatibleStateImageBehavior = false;
-            this.lvFormFields.View = System.Windows.Forms.View.Details;
-            // 
-            // formFieldLogicalName
-            // 
-            this.formFieldLogicalName.Text = "Logical Name";
-            this.formFieldLogicalName.Width = 150;
-            // 
             // tpViews
             // 
             this.tpViews.BackColor = System.Drawing.SystemColors.Control;
-            this.tpViews.Controls.Add(this.lvViews);
+            this.tpViews.Controls.Add(this.dgvViews);
             this.tpViews.Location = new System.Drawing.Point(4, 25);
             this.tpViews.Margin = new System.Windows.Forms.Padding(2);
             this.tpViews.Name = "tpViews";
@@ -341,29 +289,10 @@ namespace Quick_Translator
             this.tpViews.TabIndex = 3;
             this.tpViews.Text = "Views";
             // 
-            // lvViews
-            // 
-            this.lvViews.BackColor = System.Drawing.SystemColors.Control;
-            this.lvViews.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.viewLogicalName});
-            this.lvViews.HideSelection = false;
-            this.lvViews.Location = new System.Drawing.Point(4, 4);
-            this.lvViews.Margin = new System.Windows.Forms.Padding(2);
-            this.lvViews.Name = "lvViews";
-            this.lvViews.Size = new System.Drawing.Size(645, 516);
-            this.lvViews.TabIndex = 0;
-            this.lvViews.UseCompatibleStateImageBehavior = false;
-            this.lvViews.View = System.Windows.Forms.View.Details;
-            // 
-            // viewLogicalName
-            // 
-            this.viewLogicalName.Text = "Logical Name";
-            this.viewLogicalName.Width = 150;
-            // 
             // tpBooleans
             // 
             this.tpBooleans.BackColor = System.Drawing.SystemColors.Control;
-            this.tpBooleans.Controls.Add(this.lvBooleans);
+            this.tpBooleans.Controls.Add(this.dgvBooleans);
             this.tpBooleans.Location = new System.Drawing.Point(4, 25);
             this.tpBooleans.Margin = new System.Windows.Forms.Padding(2);
             this.tpBooleans.Name = "tpBooleans";
@@ -372,29 +301,10 @@ namespace Quick_Translator
             this.tpBooleans.TabIndex = 4;
             this.tpBooleans.Text = "Booleans";
             // 
-            // lvBooleans
-            // 
-            this.lvBooleans.BackColor = System.Drawing.SystemColors.Control;
-            this.lvBooleans.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.boolLogicalName});
-            this.lvBooleans.HideSelection = false;
-            this.lvBooleans.Location = new System.Drawing.Point(4, 4);
-            this.lvBooleans.Margin = new System.Windows.Forms.Padding(2);
-            this.lvBooleans.Name = "lvBooleans";
-            this.lvBooleans.Size = new System.Drawing.Size(645, 516);
-            this.lvBooleans.TabIndex = 0;
-            this.lvBooleans.UseCompatibleStateImageBehavior = false;
-            this.lvBooleans.View = System.Windows.Forms.View.Details;
-            // 
-            // boolLogicalName
-            // 
-            this.boolLogicalName.Text = "Logical Name";
-            this.boolLogicalName.Width = 150;
-            // 
             // tpPicklists
             // 
             this.tpPicklists.BackColor = System.Drawing.SystemColors.Control;
-            this.tpPicklists.Controls.Add(this.lvPicklists);
+            this.tpPicklists.Controls.Add(this.dgvPicklists);
             this.tpPicklists.Location = new System.Drawing.Point(4, 25);
             this.tpPicklists.Margin = new System.Windows.Forms.Padding(2);
             this.tpPicklists.Name = "tpPicklists";
@@ -403,24 +313,116 @@ namespace Quick_Translator
             this.tpPicklists.TabIndex = 5;
             this.tpPicklists.Text = "Picklists";
             // 
-            // lvPicklists
+            // dgvAttributes
             // 
-            this.lvPicklists.BackColor = System.Drawing.SystemColors.Control;
-            this.lvPicklists.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.dgvAttributes.AllowUserToAddRows = false;
+            this.dgvAttributes.AllowUserToDeleteRows = false;
+            this.dgvAttributes.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.dgvAttributes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvAttributes.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.attrLogicalName});
+            this.dgvAttributes.Location = new System.Drawing.Point(5, 5);
+            this.dgvAttributes.Name = "dgvAttributes";
+            this.dgvAttributes.Size = new System.Drawing.Size(643, 514);
+            this.dgvAttributes.TabIndex = 0;
+            // 
+            // dgvForms
+            // 
+            this.dgvForms.AllowUserToAddRows = false;
+            this.dgvForms.AllowUserToDeleteRows = false;
+            this.dgvForms.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.dgvForms.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvForms.Location = new System.Drawing.Point(5, 5);
+            this.dgvForms.Name = "dgvForms";
+            this.dgvForms.Size = new System.Drawing.Size(643, 514);
+            this.dgvForms.TabIndex = 0;
+            // 
+            // attrLogicalName
+            // 
+            this.attrLogicalName.HeaderText = "Logical Name";
+            this.attrLogicalName.Name = "attrLogicalName";
+            this.attrLogicalName.ReadOnly = true;
+            this.attrLogicalName.Width = 150;
+            // 
+            // dgvFormFields
+            // 
+            this.dgvFormFields.AllowUserToAddRows = false;
+            this.dgvFormFields.AllowUserToDeleteRows = false;
+            this.dgvFormFields.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.dgvFormFields.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvFormFields.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.formFieldsLogicalName});
+            this.dgvFormFields.Location = new System.Drawing.Point(5, 5);
+            this.dgvFormFields.Name = "dgvFormFields";
+            this.dgvFormFields.Size = new System.Drawing.Size(643, 514);
+            this.dgvFormFields.TabIndex = 0;
+            // 
+            // dgvViews
+            // 
+            this.dgvViews.AllowUserToAddRows = false;
+            this.dgvViews.AllowUserToDeleteRows = false;
+            this.dgvViews.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.dgvViews.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvViews.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.viewsLogicalName});
+            this.dgvViews.Location = new System.Drawing.Point(5, 5);
+            this.dgvViews.Name = "dgvViews";
+            this.dgvViews.Size = new System.Drawing.Size(643, 514);
+            this.dgvViews.TabIndex = 0;
+            // 
+            // dgvBooleans
+            // 
+            this.dgvBooleans.AllowUserToAddRows = false;
+            this.dgvBooleans.AllowUserToDeleteRows = false;
+            this.dgvBooleans.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.dgvBooleans.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvBooleans.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.boolLogicalName});
+            this.dgvBooleans.Location = new System.Drawing.Point(5, 5);
+            this.dgvBooleans.Name = "dgvBooleans";
+            this.dgvBooleans.Size = new System.Drawing.Size(643, 514);
+            this.dgvBooleans.TabIndex = 0;
+            // 
+            // dgvPicklists
+            // 
+            this.dgvPicklists.AllowUserToAddRows = false;
+            this.dgvPicklists.AllowUserToDeleteRows = false;
+            this.dgvPicklists.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.dgvPicklists.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvPicklists.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.picklistLogicalName});
-            this.lvPicklists.HideSelection = false;
-            this.lvPicklists.Location = new System.Drawing.Point(4, 4);
-            this.lvPicklists.Margin = new System.Windows.Forms.Padding(2);
-            this.lvPicklists.Name = "lvPicklists";
-            this.lvPicklists.Size = new System.Drawing.Size(645, 516);
-            this.lvPicklists.TabIndex = 0;
-            this.lvPicklists.UseCompatibleStateImageBehavior = false;
-            this.lvPicklists.View = System.Windows.Forms.View.Details;
+            this.dgvPicklists.Location = new System.Drawing.Point(5, 5);
+            this.dgvPicklists.Name = "dgvPicklists";
+            this.dgvPicklists.Size = new System.Drawing.Size(643, 514);
+            this.dgvPicklists.TabIndex = 0;
+            // 
+            // boolLogicalName
+            // 
+            this.boolLogicalName.HeaderText = "Logical Name";
+            this.boolLogicalName.Name = "boolLogicalName";
+            this.boolLogicalName.ReadOnly = true;
+            this.boolLogicalName.Width = 150;
             // 
             // picklistLogicalName
             // 
-            this.picklistLogicalName.Text = "Logical Name";
+            this.picklistLogicalName.HeaderText = "Logical Name";
+            this.picklistLogicalName.Name = "picklistLogicalName";
+            this.picklistLogicalName.ReadOnly = true;
             this.picklistLogicalName.Width = 150;
+            // 
+            // viewsLogicalName
+            // 
+            this.viewsLogicalName.HeaderText = "Logical Name";
+            this.viewsLogicalName.Name = "viewsLogicalName";
+            this.viewsLogicalName.ReadOnly = true;
+            this.viewsLogicalName.Width = 150;
+            // 
+            // formFieldsLogicalName
+            // 
+            this.formFieldsLogicalName.HeaderText = "Logical Name";
+            this.formFieldsLogicalName.Name = "formFieldsLogicalName";
+            this.formFieldsLogicalName.ReadOnly = true;
+            this.formFieldsLogicalName.Width = 150;
             // 
             // MainControl
             // 
@@ -444,6 +446,12 @@ namespace Quick_Translator
             this.tpViews.ResumeLayout(false);
             this.tpBooleans.ResumeLayout(false);
             this.tpPicklists.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvAttributes)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvForms)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvFormFields)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvViews)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvBooleans)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvPicklists)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -469,18 +477,17 @@ namespace Quick_Translator
         private System.Windows.Forms.TabPage tpViews;
         private System.Windows.Forms.TabPage tpBooleans;
         private System.Windows.Forms.TabPage tpPicklists;
-        private System.Windows.Forms.ListView lvAttributes;
-        private System.Windows.Forms.ColumnHeader attrLogicalName;
-        private System.Windows.Forms.ListView lvForms;
-        private System.Windows.Forms.ListView lvFormFields;
-        private System.Windows.Forms.ListView lvViews;
-        private System.Windows.Forms.ListView lvBooleans;
-        private System.Windows.Forms.ListView lvPicklists;
         private System.Windows.Forms.Button btnLoadEntities;
-        private System.Windows.Forms.ColumnHeader formLogicalName;
-        private System.Windows.Forms.ColumnHeader formFieldLogicalName;
-        private System.Windows.Forms.ColumnHeader viewLogicalName;
-        private System.Windows.Forms.ColumnHeader boolLogicalName;
-        private System.Windows.Forms.ColumnHeader picklistLogicalName;
+        private System.Windows.Forms.DataGridView dgvAttributes;
+        private System.Windows.Forms.DataGridViewTextBoxColumn attrLogicalName;
+        private System.Windows.Forms.DataGridView dgvForms;
+        private System.Windows.Forms.DataGridView dgvFormFields;
+        private System.Windows.Forms.DataGridViewTextBoxColumn formFieldsLogicalName;
+        private System.Windows.Forms.DataGridView dgvViews;
+        private System.Windows.Forms.DataGridViewTextBoxColumn viewsLogicalName;
+        private System.Windows.Forms.DataGridView dgvBooleans;
+        private System.Windows.Forms.DataGridViewTextBoxColumn boolLogicalName;
+        private System.Windows.Forms.DataGridView dgvPicklists;
+        private System.Windows.Forms.DataGridViewTextBoxColumn picklistLogicalName;
     }
 }

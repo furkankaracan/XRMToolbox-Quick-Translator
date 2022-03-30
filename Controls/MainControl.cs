@@ -1,16 +1,11 @@
 ﻿using McTools.Xrm.Connection;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Sdk.Metadata;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using XrmToolBox.Extensibility;
 using Microsoft.Xrm.Sdk.Messages;
@@ -149,6 +144,9 @@ namespace Quick_Translator
 
         private void LoadEntityMetada()
         {
+            if (lvEntities?.SelectedIndices.Count < 1)
+                return;
+
             int selectedIndex = lvEntities.SelectedIndices[0];
             var filters = EntityFilters.Default;
 
@@ -168,31 +166,26 @@ namespace Quick_Translator
 
             var response = (RetrieveEntityResponse)Service.Execute(request);
 
+            var entityMetadata = response.EntityMetadata;
 
+            if (tcSelectedEntityTabs.SelectedIndex == 0)
+                MainControlBusiness.LoadAttributesTab(entityMetadata, dgvAttributes);
+            else if (tcSelectedEntityTabs.SelectedIndex == 1)
+                MainControlBusiness.LoadFormsTab(Service,entityMetadata.LogicalName, dgvForms);
         }
 
         private void MainControl_Load(object sender, EventArgs e)
-        {
-            AddLanguageColumns();
-        }
-
-        private void AddLanguageColumns()
         {
             RetrieveAvailableLanguagesRequest req = new RetrieveAvailableLanguagesRequest();
             var resp = (RetrieveAvailableLanguagesResponse)Service.Execute(req);
             var lcIds = (int[])resp.Results["LocaleIds"];
 
-            foreach (int lcid in lcIds)
-            {
-                string languageLabel = LanguageCodeHelper.GetLanguageLabelByLCID(lcid);
-
-                ListViewHelper.AddColumn(lvAttributes, languageLabel, 150);
-                ListViewHelper.AddColumn(lvForms, languageLabel, 150);
-                ListViewHelper.AddColumn(lvFormFields, languageLabel, 150);
-                ListViewHelper.AddColumn(lvViews, languageLabel, 150);
-                ListViewHelper.AddColumn(lvBooleans, languageLabel, 150);
-                ListViewHelper.AddColumn(lvPicklists, languageLabel, 150);
-            }
+            MainControlBusiness.AddLanguageColumns(dgvAttributes, lcIds);
+            MainControlBusiness.AddLanguageColumns(dgvForms, lcIds);
+            MainControlBusiness.AddLanguageColumns(dgvFormFields, lcIds);
+            MainControlBusiness.AddLanguageColumns(dgvViews, lcIds);
+            MainControlBusiness.AddLanguageColumns(dgvBooleans, lcIds);
+            MainControlBusiness.AddLanguageColumns(dgvPicklists, lcIds);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk.Metadata.Query;
@@ -77,6 +78,72 @@ namespace Quick_Translator
             }
 
             return entityMetadataList;
+        }
+
+        public static IEnumerable<Entity> RetrieveEntityForms(string entityLogicalName, IOrganizationService orgService)
+        {
+            var query = new QueryExpression("systemform")
+            {
+                ColumnSet = new ColumnSet(true),
+                Criteria = new FilterExpression()
+                {
+                    Conditions =
+                    {
+                        new ConditionExpression("objecttypecode", ConditionOperator.Equal, entityLogicalName),
+                        new ConditionExpression("type", ConditionOperator.In, new[]{2,6,7})
+                    }
+                }
+            };
+
+            return orgService.RetrieveMultiple(query).Entities;
+        }
+
+        public static List<FormMetadata> RetrieveFormMetadata(string entityLogicalName, IOrganizationService orgService)
+        {
+            var forms = RetrieveEntityForms(entityLogicalName, orgService);
+
+            var formMetadataList = new List<FormMetadata>();
+
+            foreach (var form in forms)
+            {
+                var formXMLString = form.GetAttributeValue<string>("formxml");
+                var formXML = new XmlDocument();
+                formXML.LoadXml(formXMLString);
+
+                var formMetadata = formMetadataList.FirstOrDefault(f => f.FormUniqueId == form.GetAttributeValue<Guid>("formidunique"));
+
+                if (formMetadata == null)
+                {
+                    formMetadata = new FormMetadata
+                    {
+                        FormUniqueId = form.GetAttributeValue<Guid>("formidunique"),
+                        Id = form.GetAttributeValue<Guid>("formid"),
+                        Entity = entityLogicalName,
+                        Names = new Dictionary<int, string>(),
+                        Descriptions = new Dictionary<int, string>()
+                    };
+                    formMetadataList.Add(formMetadata);
+                }
+
+                RetrieveLocLabelsRequest request;
+                RetrieveLocLabelsResponse response;
+
+                // Names
+                request = new RetrieveLocLabelsRequest
+                {
+                    AttributeName = "name",
+                    EntityMoniker = new EntityReference("systemform", form.Id)
+                };
+
+                response = (RetrieveLocLabelsResponse)orgService.Execute(request);
+
+                foreach (var locLabel in response.Label.LocalizedLabels)
+                {
+                    formMetadata.Names.Add(locLabel.LanguageCode, locLabel.Label);
+                }
+            }
+
+            return formMetadataList;
         }
     }
 }
