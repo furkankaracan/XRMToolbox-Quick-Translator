@@ -11,10 +11,16 @@ namespace Quick_Translator
 {
     public class MainControlBusiness
     {
-        public static void LoadAttributesTab(EntityMetadata entityMetadata, DataGridView dgvAttributes)
+        public static void LoadAttributesTab(EntityMetadata entityMetadata, DataGridView dgvAttributes, bool indexChanged)
         {
-            if (dgvAttributes.Rows.Count > 0)
-                return;
+            if (!indexChanged)
+            {
+                if (dgvAttributes.Rows.Count > 0)
+                    return;
+            }
+            else if (dgvAttributes.Rows.Count > 0)
+                dgvAttributes.Rows.Clear();
+
 
             int rowIndex = 0;
             var attributes = entityMetadata.Attributes;
@@ -38,10 +44,15 @@ namespace Quick_Translator
             }
         }
 
-        public static void LoadFormsTab(IOrganizationService orgService, string entityLogicalName, DataGridView dvgForms)
+        public static void LoadFormsTab(IOrganizationService orgService, string entityLogicalName, DataGridView dgvForms, bool indexChanged)
         {
-            if (dvgForms.Rows.Count > 0)
-                return;
+            if (!indexChanged)
+            {
+                if (dgvForms.Rows.Count > 0)
+                    return;
+            }
+            else if (dgvForms.Rows.Count > 0)
+                dgvForms.Rows.Clear();
 
             var formMetadataList = MetadataHelper.RetrieveFormMetadata(entityLogicalName, orgService);
 
@@ -55,9 +66,49 @@ namespace Quick_Translator
                     labelList.Add(formNames.Value);
                 }
 
-                dvgForms.Rows.Insert(rowIndex, labelList.ToArray());
-                dvgForms.Rows[rowIndex].Tag = formMetadata;
+                dgvForms.Rows.Insert(rowIndex, labelList.ToArray());
+                dgvForms.Rows[rowIndex].Tag = formMetadata;
                 rowIndex++;
+            }
+        }
+
+        public static void LoadFormFieldsTab(IOrganizationService orgService, string entityLogicalName, DataGridView dgvFormFields, bool indexChanged, List<int> lcIdList)
+        {
+            if (!indexChanged)
+            {
+                if (dgvFormFields.Rows.Count > 0)
+                    return;
+            }
+            else if (dgvFormFields.Rows.Count > 0)
+                dgvFormFields.Rows.Clear();
+            int rowIndex = 0;
+
+            foreach (var lcId in lcIdList)
+            {
+                var forms = MetadataHelper.RetrieveEntityForms(entityLogicalName, orgService);
+
+                foreach (var form in forms)
+                {
+                    var formFieldMetadataList = MetadataHelper.RetrieveFormFields(form, lcId, entityLogicalName);
+
+                    foreach (var formFieldMetadata in formFieldMetadataList)
+                    {
+                        var labelList = new List<string>();
+                        labelList.Add(formFieldMetadata.Form);
+                        labelList.Add(formFieldMetadata.Tab);
+                        labelList.Add(formFieldMetadata.Section);
+                        labelList.Add(formFieldMetadata.Attribute);
+
+                        foreach (var formFieldNames in formFieldMetadata.Names)
+                        {
+                            labelList.Add(formFieldNames.Value);
+                        }
+
+                        dgvFormFields.Rows.Insert(rowIndex, labelList.ToArray());
+                        dgvFormFields.Rows[rowIndex].Tag = formFieldMetadata;
+                        rowIndex++;
+                    }
+                }
             }
         }
 

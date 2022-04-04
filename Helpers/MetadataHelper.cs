@@ -106,10 +106,6 @@ namespace Quick_Translator
 
             foreach (var form in forms)
             {
-                var formXMLString = form.GetAttributeValue<string>("formxml");
-                var formXML = new XmlDocument();
-                formXML.LoadXml(formXMLString);
-
                 var formMetadata = formMetadataList.FirstOrDefault(f => f.FormUniqueId == form.GetAttributeValue<Guid>("formidunique"));
 
                 if (formMetadata == null)
@@ -144,6 +140,192 @@ namespace Quick_Translator
             }
 
             return formMetadataList;
+        }
+
+        public static List<FormFieldMetadata> RetrieveFormFields(Entity form, int lcId, string entityLogicalName)
+        {
+            #region Metadata Variables
+
+            var formFieldMetadataList = new List<FormFieldMetadata>();
+            var formSectionMetadataList = new List<FormSectionMetadata>();
+            var formTabMetadataList = new List<FormTabMetadata>();
+
+            #endregion Metadata Variables
+
+            #region Form XML
+            var formXMLString = form.GetAttributeValue<string>("formxml");
+            var formXML = new XmlDocument();
+            formXML.LoadXml(formXMLString);
+            #endregion Form XML
+
+            #region Extract Form Header
+            var cellNodesHeader = formXML.DocumentElement.SelectNodes("header/rows/row/cell");
+
+            foreach (XmlNode cellNode in cellNodesHeader)
+            {
+                ExtractField(cellNode, formFieldMetadataList, form, null, null, entityLogicalName, lcId);
+            }
+            #endregion Extract Form Header
+
+            #region Extract Form Fields
+            foreach (XmlNode tabNode in formXML.SelectNodes("//tab"))
+            {
+                var tabName = ExtractTabName(tabNode, lcId, formTabMetadataList, form, entityLogicalName);
+
+                foreach (XmlNode sectionNode in tabNode.SelectNodes("columns/column/sections/section"))
+                {
+                    var sectionName = ExtractSection(sectionNode, lcId, formSectionMetadataList, form,
+                        tabName, entityLogicalName);
+
+                    #region Extract Labels
+                    foreach (XmlNode labelNode in sectionNode.SelectNodes("rows/row/cell"))
+                    {
+                        ExtractField(labelNode, formFieldMetadataList, form, tabName, sectionName,
+                            entityLogicalName, lcId);
+                    }
+                    #endregion Extract Labels
+                }
+            }
+            #endregion Extract Form Fields
+
+            #region Extract Form Footer
+            var cellNodes = formXML.DocumentElement.SelectNodes("footer/rows/row/cell");
+            foreach (XmlNode cellNode in cellNodes)
+            {
+                ExtractField(cellNode, formFieldMetadataList, form, null, null, entityLogicalName, lcId);
+            }
+            #endregion Extract Form Footer
+
+            return formFieldMetadataList;
+        }
+
+        private static void ExtractField(XmlNode cellNode, List<FormFieldMetadata> formFieldMetadataList, Entity form, string tabName,
+            string sectionName, string entityLogicalName, int lcId)
+        {
+            if (cellNode.Attributes == null)
+                return;
+
+            var cellIdAttr = cellNode.Attributes["id"];
+            if (cellIdAttr == null)
+                return;
+
+            if (cellNode.ChildNodes.Count == 0)
+                return;
+
+            var controlNode = cellNode.SelectSingleNode("control");
+            if (controlNode == null || controlNode.Attributes == null)
+                return;
+
+            var formFieldMetadata = formFieldMetadataList.FirstOrDefault(f => f.Id == new Guid(cellIdAttr.Value) && f.FormUniqueId == form.GetAttributeValue<Guid>("formidunique"));
+            if (formFieldMetadata == null)
+            {
+                formFieldMetadata = new FormFieldMetadata
+                {
+                    Id = new Guid(cellIdAttr.Value),
+                    Form = form.GetAttributeValue<string>("name"),
+                    FormUniqueId = form.GetAttributeValue<Guid>("formidunique"),
+                    FormId = form.GetAttributeValue<Guid>("formid"),
+                    Tab = tabName,
+                    Section = sectionName,
+                    Entity = entityLogicalName,
+                    Attribute = controlNode.Attributes["id"].Value,
+                    Names = new Dictionary<int, string>()
+                };
+                formFieldMetadataList.Add(formFieldMetadata);
+            }
+
+            var labelNode = cellNode.SelectSingleNode("labels/label[@languagecode='" + lcId + "']");
+            var labelNodeAttributes = labelNode?.Attributes;
+            var labelDescription = labelNodeAttributes?["description"];
+
+            if (formFieldMetadata.Names.ContainsKey(lcId))
+            {
+                return;
+            }
+
+            formFieldMetadata.Names.Add(lcId, labelDescription == null ? string.Empty : labelDescription.Value);
+        }
+
+        private static string ExtractTabName(XmlNode tabNode, int lcId, List<FormTabMetadata> formTabMetadataList, Entity form,
+            string entityLogicalName)
+        {
+            if (tabNode.Attributes == null || tabNode.Attributes["id"] == null)
+                return string.Empty;
+
+            var tabId = tabNode.Attributes["id"].Value;
+
+            var tabLabelNode = tabNode.SelectSingleNode("labels/label[@languagecode='" + lcId + "']");
+            if (tabLabelNode == null || tabLabelNode.Attributes == null)
+                return string.Empty;
+
+            var tabLabelDescAttr = tabLabelNode.Attributes["description"];
+            if (tabLabelDescAttr == null)
+                return string.Empty;
+
+            var tabName = tabLabelDescAttr.Value;
+
+            var formTabMetadata = formTabMetadataList.FirstOrDefault(f => f.Id == new Guid(tabId) && f.FormUniqueId == form.GetAttributeValue<Guid>("formidunique"));
+            if (formTabMetadata == null)
+            {
+                formTabMetadata = new FormTabMetadata
+                {
+                    Id = new Guid(tabId),
+                    FormUniqueId = form.GetAttributeValue<Guid>("formidunique"),
+                    FormId = form.GetAttributeValue<Guid>("formid"),
+                    Form = form.GetAttributeValue<string>("name"),
+                    Entity = entityLogicalName,
+                    Names = new Dictionary<int, string>()
+                };
+                formTabMetadataList.Add(formTabMetadata);
+            }
+
+            if (formTabMetadata.Names.ContainsKey(lcId))
+            {
+                return tabName;
+            }
+
+            formTabMetadata.Names.Add(lcId, tabName);
+            return tabName;
+        }
+
+        public static string ExtractSection(XmlNode sectionNode, int lcId, List<FormSectionMetadata> formSectionMetadataList, Entity form, string tabName, string entityLogicalName)
+        {
+            if (sectionNode.Attributes == null || sectionNode.Attributes["id"] == null)
+                return string.Empty;
+            var sectionId = sectionNode.Attributes["id"].Value;
+
+            var sectionLabelNode = sectionNode.SelectSingleNode("labels/label[@languagecode='" + lcId + "']");
+            if (sectionLabelNode == null || sectionLabelNode.Attributes == null)
+                return string.Empty;
+
+            var sectionNameAttr = sectionLabelNode.Attributes["description"];
+            if (sectionNameAttr == null)
+                return string.Empty;
+            var sectionName = sectionNameAttr.Value;
+
+            var crmFormSection = formSectionMetadataList.FirstOrDefault(f => f.Id == new Guid(sectionId) && f.FormUniqueId == form.GetAttributeValue<Guid>("formidunique"));
+            if (crmFormSection == null)
+            {
+                crmFormSection = new FormSectionMetadata
+                {
+                    Id = new Guid(sectionId),
+                    FormUniqueId = form.GetAttributeValue<Guid>("formidunique"),
+                    FormId = form.GetAttributeValue<Guid>("formid"),
+                    Form = form.GetAttributeValue<string>("name"),
+                    Tab = tabName,
+                    Entity = entityLogicalName,
+                    Names = new Dictionary<int, string>()
+                };
+                formSectionMetadataList.Add(crmFormSection);
+            }
+
+            if (crmFormSection.Names.ContainsKey(lcId))
+            {
+                return sectionName;
+            }
+
+            crmFormSection.Names.Add(lcId, sectionName);
+            return sectionName;
         }
     }
 }

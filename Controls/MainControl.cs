@@ -17,7 +17,7 @@ namespace Quick_Translator
         #region variables
 
         private Settings mySettings;
-        private List<int> lcIdList;
+        private List<int> lcIdList = new List<int>();
         private List<EntityMetadata> entityMetadataList;
 
         #endregion variables
@@ -134,15 +134,15 @@ namespace Quick_Translator
         {
             if (lvEntities.SelectedIndices.Count <= 0) return;
 
-            LoadEntityMetada();
+            LoadEntityMetada(true);
         }
 
         private void tcSelectedEntityTabs_TabIndexChanged(object sender, EventArgs e)
         {
-            LoadEntityMetada();
+            LoadEntityMetada(false);
         }
 
-        private void LoadEntityMetada()
+        private void LoadEntityMetada(bool indexChanged)
         {
             if (lvEntities?.SelectedIndices.Count < 1)
                 return;
@@ -169,9 +169,11 @@ namespace Quick_Translator
             var entityMetadata = response.EntityMetadata;
 
             if (tcSelectedEntityTabs.SelectedIndex == 0)
-                MainControlBusiness.LoadAttributesTab(entityMetadata, dgvAttributes);
+                MainControlBusiness.LoadAttributesTab(entityMetadata, dgvAttributes,indexChanged);
             else if (tcSelectedEntityTabs.SelectedIndex == 1)
-                MainControlBusiness.LoadFormsTab(Service,entityMetadata.LogicalName, dgvForms);
+                MainControlBusiness.LoadFormsTab(Service, entityMetadata.LogicalName, dgvForms,indexChanged);
+            else if (tcSelectedEntityTabs.SelectedIndex == 2)
+                MainControlBusiness.LoadFormFieldsTab(Service, entityMetadata.LogicalName, dgvFormFields,indexChanged, lcIdList);
         }
 
         private void MainControl_Load(object sender, EventArgs e)
@@ -179,6 +181,7 @@ namespace Quick_Translator
             RetrieveAvailableLanguagesRequest req = new RetrieveAvailableLanguagesRequest();
             var resp = (RetrieveAvailableLanguagesResponse)Service.Execute(req);
             var lcIds = (int[])resp.Results["LocaleIds"];
+            lcIdList.AddRange(lcIds);
 
             MainControlBusiness.AddLanguageColumns(dgvAttributes, lcIds);
             MainControlBusiness.AddLanguageColumns(dgvForms, lcIds);
