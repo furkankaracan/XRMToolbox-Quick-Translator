@@ -142,16 +142,9 @@ namespace Quick_Translator
             return formMetadataList;
         }
 
-        public static List<FormFieldMetadata> RetrieveFormFields(Entity form, int lcId, string entityLogicalName)
+        public static void RetrieveFormFields(Entity form, List<int> lcIdList, string entityLogicalName,
+            List<FormFieldMetadata> formFieldMetadataList, List<FormSectionMetadata> formSectionMetadataList, List<FormTabMetadata> formTabMetadataList)
         {
-            #region Metadata Variables
-
-            var formFieldMetadataList = new List<FormFieldMetadata>();
-            var formSectionMetadataList = new List<FormSectionMetadata>();
-            var formTabMetadataList = new List<FormTabMetadata>();
-
-            #endregion Metadata Variables
-
             #region Form XML
             var formXMLString = form.GetAttributeValue<string>("formxml");
             var formXML = new XmlDocument();
@@ -161,42 +154,44 @@ namespace Quick_Translator
             #region Extract Form Header
             var cellNodesHeader = formXML.DocumentElement.SelectNodes("header/rows/row/cell");
 
-            foreach (XmlNode cellNode in cellNodesHeader)
+            foreach (var lcId in lcIdList)
             {
-                ExtractField(cellNode, formFieldMetadataList, form, null, null, entityLogicalName, lcId);
-            }
-            #endregion Extract Form Header
-
-            #region Extract Form Fields
-            foreach (XmlNode tabNode in formXML.SelectNodes("//tab"))
-            {
-                var tabName = ExtractTabName(tabNode, lcId, formTabMetadataList, form, entityLogicalName);
-
-                foreach (XmlNode sectionNode in tabNode.SelectNodes("columns/column/sections/section"))
+                foreach (XmlNode cellNode in cellNodesHeader)
                 {
-                    var sectionName = ExtractSection(sectionNode, lcId, formSectionMetadataList, form,
-                        tabName, entityLogicalName);
-
-                    #region Extract Labels
-                    foreach (XmlNode labelNode in sectionNode.SelectNodes("rows/row/cell"))
-                    {
-                        ExtractField(labelNode, formFieldMetadataList, form, tabName, sectionName,
-                            entityLogicalName, lcId);
-                    }
-                    #endregion Extract Labels
+                    ExtractField(cellNode, formFieldMetadataList, form, null, null, entityLogicalName, lcId);
                 }
-            }
-            #endregion Extract Form Fields
+                #endregion Extract Form Header
 
-            #region Extract Form Footer
-            var cellNodes = formXML.DocumentElement.SelectNodes("footer/rows/row/cell");
-            foreach (XmlNode cellNode in cellNodes)
-            {
-                ExtractField(cellNode, formFieldMetadataList, form, null, null, entityLogicalName, lcId);
-            }
-            #endregion Extract Form Footer
+                #region Extract Form Fields
+                foreach (XmlNode tabNode in formXML.SelectNodes("//tab"))
+                {
+                    var tabName = ExtractTabName(tabNode, lcId, formTabMetadataList, form, entityLogicalName);
 
-            return formFieldMetadataList;
+                    foreach (XmlNode sectionNode in tabNode.SelectNodes("columns/column/sections/section"))
+                    {
+                        var sectionName = ExtractSection(sectionNode, lcId, formSectionMetadataList, form,
+                            tabName, entityLogicalName);
+
+                        #region Extract Labels
+                        foreach (XmlNode labelNode in sectionNode.SelectNodes("rows/row/cell"))
+                        {
+                            ExtractField(labelNode, formFieldMetadataList, form, tabName, sectionName,
+                                entityLogicalName, lcId);
+                        }
+                        #endregion Extract Labels
+                    }
+                }
+                #endregion Extract Form Fields
+
+                #region Extract Form Footer
+                var cellNodes = formXML.DocumentElement.SelectNodes("footer/rows/row/cell");
+                foreach (XmlNode cellNode in cellNodes)
+                {
+                    ExtractField(cellNode, formFieldMetadataList, form, null, null, entityLogicalName, lcId);
+                }
+                #endregion Extract Form Footer
+            }
+            return;
         }
 
         private static void ExtractField(XmlNode cellNode, List<FormFieldMetadata> formFieldMetadataList, Entity form, string tabName,
@@ -303,10 +298,10 @@ namespace Quick_Translator
                 return string.Empty;
             var sectionName = sectionNameAttr.Value;
 
-            var crmFormSection = formSectionMetadataList.FirstOrDefault(f => f.Id == new Guid(sectionId) && f.FormUniqueId == form.GetAttributeValue<Guid>("formidunique"));
-            if (crmFormSection == null)
+            var formSectionMetadata = formSectionMetadataList.FirstOrDefault(f => f.Id == new Guid(sectionId) && f.FormUniqueId == form.GetAttributeValue<Guid>("formidunique"));
+            if (formSectionMetadata == null)
             {
-                crmFormSection = new FormSectionMetadata
+                formSectionMetadata = new FormSectionMetadata
                 {
                     Id = new Guid(sectionId),
                     FormUniqueId = form.GetAttributeValue<Guid>("formidunique"),
@@ -316,15 +311,15 @@ namespace Quick_Translator
                     Entity = entityLogicalName,
                     Names = new Dictionary<int, string>()
                 };
-                formSectionMetadataList.Add(crmFormSection);
+                formSectionMetadataList.Add(formSectionMetadata);
             }
 
-            if (crmFormSection.Names.ContainsKey(lcId))
+            if (formSectionMetadata.Names.ContainsKey(lcId))
             {
                 return sectionName;
             }
 
-            crmFormSection.Names.Add(lcId, sectionName);
+            formSectionMetadata.Names.Add(lcId, sectionName);
             return sectionName;
         }
     }

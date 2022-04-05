@@ -81,34 +81,39 @@ namespace Quick_Translator
             }
             else if (dgvFormFields.Rows.Count > 0)
                 dgvFormFields.Rows.Clear();
+
+            #region Metadata Variables
+            var formFieldMetadataList = new List<FormFieldMetadata>();
+            var formSectionMetadataList = new List<FormSectionMetadata>();
+            var formTabMetadataList = new List<FormTabMetadata>();
+            #endregion Metadata Variables
+
             int rowIndex = 0;
 
-            foreach (var lcId in lcIdList)
+            var forms = MetadataHelper.RetrieveEntityForms(entityLogicalName, orgService);
+            forms = forms.OrderBy(prm => prm.GetAttributeValue<string>("name"));
+
+            foreach (var form in forms)
             {
-                var forms = MetadataHelper.RetrieveEntityForms(entityLogicalName, orgService);
+                MetadataHelper.RetrieveFormFields(form, lcIdList, entityLogicalName, formFieldMetadataList, formSectionMetadataList, formTabMetadataList);
+            }
 
-                foreach (var form in forms)
+            foreach (var formFieldMetadata in formFieldMetadataList)
+            {
+                var labelList = new List<string>();
+                labelList.Add(formFieldMetadata.Form);
+                labelList.Add(formFieldMetadata.Tab);
+                labelList.Add(formFieldMetadata.Section);
+                labelList.Add(formFieldMetadata.Attribute);
+
+                foreach (var formFieldNames in formFieldMetadata.Names)
                 {
-                    var formFieldMetadataList = MetadataHelper.RetrieveFormFields(form, lcId, entityLogicalName);
-
-                    foreach (var formFieldMetadata in formFieldMetadataList)
-                    {
-                        var labelList = new List<string>();
-                        labelList.Add(formFieldMetadata.Form);
-                        labelList.Add(formFieldMetadata.Tab);
-                        labelList.Add(formFieldMetadata.Section);
-                        labelList.Add(formFieldMetadata.Attribute);
-
-                        foreach (var formFieldNames in formFieldMetadata.Names)
-                        {
-                            labelList.Add(formFieldNames.Value);
-                        }
-
-                        dgvFormFields.Rows.Insert(rowIndex, labelList.ToArray());
-                        dgvFormFields.Rows[rowIndex].Tag = formFieldMetadata;
-                        rowIndex++;
-                    }
+                    labelList.Add(formFieldNames.Value);
                 }
+
+                dgvFormFields.Rows.Insert(rowIndex, labelList.ToArray());
+                dgvFormFields.Rows[rowIndex].Tag = formFieldMetadata;
+                rowIndex++;
             }
         }
 

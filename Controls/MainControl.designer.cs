@@ -90,7 +90,7 @@ namespace Quick_Translator
             this.toolStripMenu.Location = new System.Drawing.Point(0, 0);
             this.toolStripMenu.Name = "toolStripMenu";
             this.toolStripMenu.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
-            this.toolStripMenu.Size = new System.Drawing.Size(1280, 27);
+            this.toolStripMenu.Size = new System.Drawing.Size(1852, 27);
             this.toolStripMenu.TabIndex = 4;
             this.toolStripMenu.Text = "toolStrip1";
             // 
@@ -221,7 +221,7 @@ namespace Quick_Translator
             this.gbSelectedEntity.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.gbSelectedEntity.Name = "gbSelectedEntity";
             this.gbSelectedEntity.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.gbSelectedEntity.Size = new System.Drawing.Size(900, 706);
+            this.gbSelectedEntity.Size = new System.Drawing.Size(1452, 886);
             this.gbSelectedEntity.TabIndex = 9;
             this.gbSelectedEntity.TabStop = false;
             this.gbSelectedEntity.Text = "Selected Entity: {0}";
@@ -238,7 +238,7 @@ namespace Quick_Translator
             this.tcSelectedEntityTabs.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tcSelectedEntityTabs.Name = "tcSelectedEntityTabs";
             this.tcSelectedEntityTabs.SelectedIndex = 0;
-            this.tcSelectedEntityTabs.Size = new System.Drawing.Size(881, 681);
+            this.tcSelectedEntityTabs.Size = new System.Drawing.Size(1453, 846);
             this.tcSelectedEntityTabs.TabIndex = 0;
             this.tcSelectedEntityTabs.SelectedIndexChanged += new System.EventHandler(this.tcSelectedEntityTabs_TabIndexChanged);
             this.tcSelectedEntityTabs.TabIndexChanged += new System.EventHandler(this.tcSelectedEntityTabs_TabIndexChanged);
@@ -251,7 +251,7 @@ namespace Quick_Translator
             this.tpAttributes.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tpAttributes.Name = "tpAttributes";
             this.tpAttributes.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tpAttributes.Size = new System.Drawing.Size(873, 648);
+            this.tpAttributes.Size = new System.Drawing.Size(1445, 813);
             this.tpAttributes.TabIndex = 0;
             this.tpAttributes.Text = "Attributes";
             // 
@@ -267,7 +267,7 @@ namespace Quick_Translator
             this.dgvAttributes.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dgvAttributes.Name = "dgvAttributes";
             this.dgvAttributes.RowHeadersWidth = 51;
-            this.dgvAttributes.Size = new System.Drawing.Size(857, 633);
+            this.dgvAttributes.Size = new System.Drawing.Size(1431, 801);
             this.dgvAttributes.TabIndex = 0;
             // 
             // attrLogicalName
@@ -286,7 +286,7 @@ namespace Quick_Translator
             this.Forms.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Forms.Name = "Forms";
             this.Forms.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Forms.Size = new System.Drawing.Size(873, 648);
+            this.Forms.Size = new System.Drawing.Size(1445, 813);
             this.Forms.TabIndex = 1;
             this.Forms.Text = "Forms";
             // 
@@ -300,7 +300,7 @@ namespace Quick_Translator
             this.dgvForms.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dgvForms.Name = "dgvForms";
             this.dgvForms.RowHeadersWidth = 51;
-            this.dgvForms.Size = new System.Drawing.Size(857, 633);
+            this.dgvForms.Size = new System.Drawing.Size(1431, 801);
             this.dgvForms.TabIndex = 0;
             // 
             // tpFormFields
@@ -311,7 +311,7 @@ namespace Quick_Translator
             this.tpFormFields.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tpFormFields.Name = "tpFormFields";
             this.tpFormFields.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tpFormFields.Size = new System.Drawing.Size(873, 648);
+            this.tpFormFields.Size = new System.Drawing.Size(1445, 813);
             this.tpFormFields.TabIndex = 2;
             this.tpFormFields.Text = "Form Fields";
             // 
@@ -330,7 +330,7 @@ namespace Quick_Translator
             this.dgvFormFields.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dgvFormFields.Name = "dgvFormFields";
             this.dgvFormFields.RowHeadersWidth = 51;
-            this.dgvFormFields.Size = new System.Drawing.Size(857, 633);
+            this.dgvFormFields.Size = new System.Drawing.Size(1438, 801);
             this.dgvFormFields.TabIndex = 0;
             // 
             // tpViews
@@ -341,7 +341,7 @@ namespace Quick_Translator
             this.tpViews.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tpViews.Name = "tpViews";
             this.tpViews.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tpViews.Size = new System.Drawing.Size(873, 648);
+            this.tpViews.Size = new System.Drawing.Size(1445, 813);
             this.tpViews.TabIndex = 3;
             this.tpViews.Text = "Views";
             // 
@@ -357,7 +357,7 @@ namespace Quick_Translator
             this.dgvViews.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dgvViews.Name = "dgvViews";
             this.dgvViews.RowHeadersWidth = 51;
-            this.dgvViews.Size = new System.Drawing.Size(857, 633);
+            this.dgvViews.Size = new System.Drawing.Size(1431, 801);
             this.dgvViews.TabIndex = 0;
             // 
             // viewsLogicalName
@@ -376,7 +376,7 @@ namespace Quick_Translator
             this.tpBooleans.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tpBooleans.Name = "tpBooleans";
             this.tpBooleans.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tpBooleans.Size = new System.Drawing.Size(873, 648);
+            this.tpBooleans.Size = new System.Drawing.Size(1445, 813);
             this.tpBooleans.TabIndex = 4;
             this.tpBooleans.Text = "Booleans";
             // 
@@ -392,7 +392,7 @@ namespace Quick_Translator
             this.dgvBooleans.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dgvBooleans.Name = "dgvBooleans";
             this.dgvBooleans.RowHeadersWidth = 51;
-            this.dgvBooleans.Size = new System.Drawing.Size(857, 633);
+            this.dgvBooleans.Size = new System.Drawing.Size(1431, 801);
             this.dgvBooleans.TabIndex = 0;
             // 
             // boolLogicalName
@@ -411,7 +411,7 @@ namespace Quick_Translator
             this.tpPicklists.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tpPicklists.Name = "tpPicklists";
             this.tpPicklists.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tpPicklists.Size = new System.Drawing.Size(873, 648);
+            this.tpPicklists.Size = new System.Drawing.Size(1445, 813);
             this.tpPicklists.TabIndex = 5;
             this.tpPicklists.Text = "Picklists";
             // 
@@ -427,7 +427,7 @@ namespace Quick_Translator
             this.dgvPicklists.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dgvPicklists.Name = "dgvPicklists";
             this.dgvPicklists.RowHeadersWidth = 51;
-            this.dgvPicklists.Size = new System.Drawing.Size(857, 633);
+            this.dgvPicklists.Size = new System.Drawing.Size(1431, 801);
             this.dgvPicklists.TabIndex = 0;
             // 
             // picklistLogicalName
@@ -479,7 +479,7 @@ namespace Quick_Translator
             this.Controls.Add(this.toolStripMenu);
             this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "MainControl";
-            this.Size = new System.Drawing.Size(1280, 767);
+            this.Size = new System.Drawing.Size(1852, 927);
             this.Load += new System.EventHandler(this.MainControl_Load);
             this.toolStripMenu.ResumeLayout(false);
             this.toolStripMenu.PerformLayout();
