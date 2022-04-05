@@ -6,6 +6,7 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Metadata;
 using System.Xml;
 using System;
+using System.Threading;
 
 namespace Quick_Translator
 {
@@ -82,6 +83,12 @@ namespace Quick_Translator
             else if (dgvFormFields.Rows.Count > 0)
                 dgvFormFields.Rows.Clear();
 
+            #region User Settings
+            var setting = DataHelper.GetCurrentUserSettings(orgService);
+            var userSettingLcid = setting.GetAttributeValue<int>("uilanguageid");
+            var currentSetting = userSettingLcid;
+            #endregion User Settings
+
             #region Metadata Variables
             var formFieldMetadataList = new List<FormFieldMetadata>();
             var formSectionMetadataList = new List<FormSectionMetadata>();
@@ -90,12 +97,27 @@ namespace Quick_Translator
 
             int rowIndex = 0;
 
-            var forms = MetadataHelper.RetrieveEntityForms(entityLogicalName, orgService);
-            forms = forms.OrderBy(prm => prm.GetAttributeValue<string>("name"));
-
-            foreach (var form in forms)
+            foreach (var lcId in lcIdList)
             {
-                MetadataHelper.RetrieveFormFields(form, lcIdList, entityLogicalName, formFieldMetadataList, formSectionMetadataList, formTabMetadataList);
+                if (currentSetting != lcId)
+                {
+                    UpdateUserSettings(orgService, setting, lcId);
+                    currentSetting = lcId;
+                    Thread.Sleep(2000);
+                }
+
+                var forms = MetadataHelper.RetrieveEntityForms(entityLogicalName, orgService);
+                forms = forms.OrderBy(prm => prm.GetAttributeValue<string>("name"));
+
+                foreach (var form in forms)
+                {
+                    MetadataHelper.RetrieveFormFields(form, lcId, entityLogicalName, formFieldMetadataList, formSectionMetadataList, formTabMetadataList);
+                }
+            }
+
+            if (userSettingLcid != currentSetting)
+            {
+                UpdateUserSettings(orgService, setting, userSettingLcid);
             }
 
             foreach (var formFieldMetadata in formFieldMetadataList)
@@ -124,6 +146,14 @@ namespace Quick_Translator
                 string languageLabel = LanguageCodeHelper.GetLanguageLabelByLCID(lcid);
                 DataGridViewHelper.AddColumn(dvg, languageLabel, 150);
             }
+        }
+
+        public static void UpdateUserSettings(IOrganizationService orgService, Entity setting, int lcId)
+        {
+            setting["localeid"] = lcId;
+            setting["uilanguageid"] = lcId;
+            setting["helplanguageid"] = lcId;
+            orgService.Update(setting);
         }
     }
 }

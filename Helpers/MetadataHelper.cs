@@ -142,7 +142,7 @@ namespace Quick_Translator
             return formMetadataList;
         }
 
-        public static void RetrieveFormFields(Entity form, List<int> lcIdList, string entityLogicalName,
+        public static void RetrieveFormFields(Entity form, int lcId, string entityLogicalName,
             List<FormFieldMetadata> formFieldMetadataList, List<FormSectionMetadata> formSectionMetadataList, List<FormTabMetadata> formTabMetadataList)
         {
             #region Form XML
@@ -154,33 +154,31 @@ namespace Quick_Translator
             #region Extract Form Header
             var cellNodesHeader = formXML.DocumentElement.SelectNodes("header/rows/row/cell");
 
-            foreach (var lcId in lcIdList)
+            foreach (XmlNode cellNode in cellNodesHeader)
             {
-                foreach (XmlNode cellNode in cellNodesHeader)
-                {
-                    ExtractField(cellNode, formFieldMetadataList, form, null, null, entityLogicalName, lcId);
-                }
-                #endregion Extract Form Header
+                ExtractField(cellNode, formFieldMetadataList, form, null, null, entityLogicalName, lcId);
+            }
+            #endregion Extract Form Header
 
-                #region Extract Form Fields
-                foreach (XmlNode tabNode in formXML.SelectNodes("//tab"))
-                {
-                    var tabName = ExtractTabName(tabNode, lcId, formTabMetadataList, form, entityLogicalName);
+            #region Extract Form Fields
+            foreach (XmlNode tabNode in formXML.SelectNodes("//tab"))
+            {
+                var tabName = ExtractTabName(tabNode, lcId, formTabMetadataList, form, entityLogicalName);
 
-                    foreach (XmlNode sectionNode in tabNode.SelectNodes("columns/column/sections/section"))
+                foreach (XmlNode sectionNode in tabNode.SelectNodes("columns/column/sections/section"))
+                {
+                    var sectionName = ExtractSection(sectionNode, lcId, formSectionMetadataList, form,
+                        tabName, entityLogicalName);
+
+                    #region Extract Labels
+                    foreach (XmlNode labelNode in sectionNode.SelectNodes("rows/row/cell"))
                     {
-                        var sectionName = ExtractSection(sectionNode, lcId, formSectionMetadataList, form,
-                            tabName, entityLogicalName);
-
-                        #region Extract Labels
-                        foreach (XmlNode labelNode in sectionNode.SelectNodes("rows/row/cell"))
-                        {
-                            ExtractField(labelNode, formFieldMetadataList, form, tabName, sectionName,
-                                entityLogicalName, lcId);
-                        }
-                        #endregion Extract Labels
+                        ExtractField(labelNode, formFieldMetadataList, form, tabName, sectionName,
+                            entityLogicalName, lcId);
                     }
+                    #endregion Extract Labels
                 }
+
                 #endregion Extract Form Fields
 
                 #region Extract Form Footer

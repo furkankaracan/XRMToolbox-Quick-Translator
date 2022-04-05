@@ -243,15 +243,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Business\FormFieldMetadata.cs" />
-    <Compile Include="Business\FormMetadata.cs" />
-    <Compile Include="Business\FormSectionMetadata.cs" />
-    <Compile Include="Business\FormTabMetadata.cs" />
+    <Compile Include="Helpers\DataHelper.cs" />
+    <Compile Include="Metadata\FormFieldMetadata.cs" />
+    <Compile Include="Metadata\FormMetadata.cs" />
+    <Compile Include="Metadata\FormSectionMetadata.cs" />
+    <Compile Include="Metadata\FormTabMetadata.cs" />
     <Compile Include="Business\MainControlBusiness.cs" />
     <Compile Include="Helpers\LanguageCodeHelper.cs" />
     <Compile Include="Helpers\DataGridViewHelper.cs" />
     <Compile Include="Helpers\MetadataHelper.cs" />
-    <Compile Include="Helpers\TabEnum.cs" />
+    <Compile Include="Enum\TabEnum.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Controls\MainControl.cs">
       <SubType>UserControl</SubType>
