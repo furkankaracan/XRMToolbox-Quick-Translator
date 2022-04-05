@@ -52,7 +52,6 @@ namespace Quick_Translator
             this.dgvFormFields = new System.Windows.Forms.DataGridView();
             this.tpViews = new System.Windows.Forms.TabPage();
             this.dgvViews = new System.Windows.Forms.DataGridView();
-            this.viewsLogicalName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tpBooleans = new System.Windows.Forms.TabPage();
             this.dgvBooleans = new System.Windows.Forms.DataGridView();
             this.boolLogicalName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -63,6 +62,7 @@ namespace Quick_Translator
             this.tabName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sectionName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.formFieldsLogicalName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.viewType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStripMenu.SuspendLayout();
             this.gbSelectEntity.SuspendLayout();
             this.gbSelectedEntity.SuspendLayout();
@@ -352,21 +352,13 @@ namespace Quick_Translator
             this.dgvViews.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dgvViews.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvViews.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.viewsLogicalName});
+            this.viewType});
             this.dgvViews.Location = new System.Drawing.Point(7, 6);
             this.dgvViews.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dgvViews.Name = "dgvViews";
             this.dgvViews.RowHeadersWidth = 51;
             this.dgvViews.Size = new System.Drawing.Size(1431, 801);
             this.dgvViews.TabIndex = 0;
-            // 
-            // viewsLogicalName
-            // 
-            this.viewsLogicalName.HeaderText = "Logical Name";
-            this.viewsLogicalName.MinimumWidth = 6;
-            this.viewsLogicalName.Name = "viewsLogicalName";
-            this.viewsLogicalName.ReadOnly = true;
-            this.viewsLogicalName.Width = 150;
             // 
             // tpBooleans
             // 
@@ -470,6 +462,14 @@ namespace Quick_Translator
             this.formFieldsLogicalName.ReadOnly = true;
             this.formFieldsLogicalName.Width = 150;
             // 
+            // viewType
+            // 
+            this.viewType.HeaderText = "View Type";
+            this.viewType.MinimumWidth = 6;
+            this.viewType.Name = "viewType";
+            this.viewType.ReadOnly = true;
+            this.viewType.Width = 150;
+            // 
             // MainControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -530,7 +530,6 @@ namespace Quick_Translator
         private System.Windows.Forms.DataGridView dgvForms;
         private System.Windows.Forms.DataGridView dgvFormFields;
         private System.Windows.Forms.DataGridView dgvViews;
-        private System.Windows.Forms.DataGridViewTextBoxColumn viewsLogicalName;
         private System.Windows.Forms.DataGridView dgvBooleans;
         private System.Windows.Forms.DataGridViewTextBoxColumn boolLogicalName;
         private System.Windows.Forms.DataGridView dgvPicklists;
@@ -539,5 +538,6 @@ namespace Quick_Translator
         private System.Windows.Forms.DataGridViewTextBoxColumn tabName;
         private System.Windows.Forms.DataGridViewTextBoxColumn sectionName;
         private System.Windows.Forms.DataGridViewTextBoxColumn formFieldsLogicalName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn viewType;
     }
 }

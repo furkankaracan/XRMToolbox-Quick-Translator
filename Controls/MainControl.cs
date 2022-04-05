@@ -169,11 +169,13 @@ namespace Quick_Translator
             var entityMetadata = response.EntityMetadata;
 
             if (tcSelectedEntityTabs.SelectedIndex == 0)
-                MainControlBusiness.LoadAttributesTab(entityMetadata, dgvAttributes,indexChanged);
+                MainControlBusiness.LoadAttributesTab(entityMetadata, dgvAttributes, indexChanged);
             else if (tcSelectedEntityTabs.SelectedIndex == 1)
-                MainControlBusiness.LoadFormsTab(Service, entityMetadata.LogicalName, dgvForms,indexChanged);
+                MainControlBusiness.LoadFormsTab(Service, entityMetadata.LogicalName, dgvForms, indexChanged);
             else if (tcSelectedEntityTabs.SelectedIndex == 2)
-                MainControlBusiness.LoadFormFieldsTab(Service, entityMetadata.LogicalName, dgvFormFields,indexChanged, lcIdList);
+                MainControlBusiness.LoadFormFieldsTab(Service, entityMetadata.LogicalName, dgvFormFields, indexChanged, lcIdList);
+            else if (tcSelectedEntityTabs.SelectedIndex == 3)
+                MainControlBusiness.LoadViewsTab(Service, entityMetadata, dgvViews, indexChanged, lcIdList);
         }
 
         private void MainControl_Load(object sender, EventArgs e)
@@ -182,6 +184,7 @@ namespace Quick_Translator
             var resp = (RetrieveAvailableLanguagesResponse)Service.Execute(req);
             var lcIds = (int[])resp.Results["LocaleIds"];
             lcIdList.AddRange(lcIds);
+            lcIdList = lcIdList.OrderByDescending(prm => prm).ToList();
 
             MainControlBusiness.AddLanguageColumns(dgvAttributes, lcIds);
             MainControlBusiness.AddLanguageColumns(dgvForms, lcIds);

@@ -14,14 +14,7 @@ namespace Quick_Translator
     {
         public static void LoadAttributesTab(EntityMetadata entityMetadata, DataGridView dgvAttributes, bool indexChanged)
         {
-            if (!indexChanged)
-            {
-                if (dgvAttributes.Rows.Count > 0)
-                    return;
-            }
-            else if (dgvAttributes.Rows.Count > 0)
-                dgvAttributes.Rows.Clear();
-
+            ClearDataGridViewIfIndexChanged(indexChanged, dgvAttributes);
 
             int rowIndex = 0;
             var attributes = entityMetadata.Attributes;
@@ -47,13 +40,7 @@ namespace Quick_Translator
 
         public static void LoadFormsTab(IOrganizationService orgService, string entityLogicalName, DataGridView dgvForms, bool indexChanged)
         {
-            if (!indexChanged)
-            {
-                if (dgvForms.Rows.Count > 0)
-                    return;
-            }
-            else if (dgvForms.Rows.Count > 0)
-                dgvForms.Rows.Clear();
+            ClearDataGridViewIfIndexChanged(indexChanged, dgvForms);
 
             var formMetadataList = MetadataHelper.RetrieveFormMetadata(entityLogicalName, orgService);
 
@@ -75,13 +62,7 @@ namespace Quick_Translator
 
         public static void LoadFormFieldsTab(IOrganizationService orgService, string entityLogicalName, DataGridView dgvFormFields, bool indexChanged, List<int> lcIdList)
         {
-            if (!indexChanged)
-            {
-                if (dgvFormFields.Rows.Count > 0)
-                    return;
-            }
-            else if (dgvFormFields.Rows.Count > 0)
-                dgvFormFields.Rows.Clear();
+            ClearDataGridViewIfIndexChanged(indexChanged, dgvFormFields);
 
             #region User Settings
             var setting = DataHelper.GetCurrentUserSettings(orgService);
@@ -106,12 +87,12 @@ namespace Quick_Translator
                     Thread.Sleep(2000);
                 }
 
-                var forms = MetadataHelper.RetrieveEntityForms(entityLogicalName, orgService);
+                var forms = DataHelper.GetEntityFormsByEntityLogicalName(entityLogicalName, orgService);
                 forms = forms.OrderBy(prm => prm.GetAttributeValue<string>("name"));
 
                 foreach (var form in forms)
                 {
-                    MetadataHelper.RetrieveFormFields(form, lcId, entityLogicalName, formFieldMetadataList, formSectionMetadataList, formTabMetadataList);
+                    MetadataHelper.RetrieveFormComponentsMetadata(form, lcId, entityLogicalName, formFieldMetadataList, formSectionMetadataList, formTabMetadataList);
                 }
             }
 
@@ -139,6 +120,31 @@ namespace Quick_Translator
             }
         }
 
+        public static void LoadViewsTab(IOrganizationService orgService, EntityMetadata entityMetadata, DataGridView dgvViews, bool indexChanged, List<int> lcIdList)
+        {
+            ClearDataGridViewIfIndexChanged(indexChanged, dgvViews);
+
+            var viewMetadaList = new List<ViewMetadata>();
+
+            MetadataHelper.RetrieveViewsMetadata(orgService, viewMetadaList, entityMetadata.ObjectTypeCode.Value);
+
+            int rowIndex = 0;
+            foreach (var viewMetadata in viewMetadaList)
+            {
+                var labelList = new List<string>();
+                labelList.Add(ViewTypeHelper.GetViewTypeByTypeCode(viewMetadata.Type));
+
+                foreach (var viewNames in viewMetadata.Names)
+                {
+                    labelList.Add(viewNames.Value);
+                }
+
+                dgvViews.Rows.Insert(rowIndex, labelList.ToArray());
+                dgvViews.Rows[rowIndex].Tag = viewMetadata;
+                rowIndex++;
+            }
+        }
+
         public static void AddLanguageColumns(DataGridView dvg, int[] lcIds)
         {
             foreach (int lcid in lcIds)
@@ -154,6 +160,17 @@ namespace Quick_Translator
             setting["uilanguageid"] = lcId;
             setting["helplanguageid"] = lcId;
             orgService.Update(setting);
+        }
+
+        private static void ClearDataGridViewIfIndexChanged(bool indexChanged, DataGridView dgv)
+        {
+            if (!indexChanged)
+            {
+                if (dgv.Rows.Count > 0)
+                    return;
+            }
+            else if (dgv.Rows.Count > 0)
+                dgv.Rows.Clear();
         }
     }
 }

@@ -244,6 +244,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\DataHelper.cs" />
+    <Compile Include="Helpers\ViewTypeHelper.cs" />
     <Compile Include="Metadata\FormFieldMetadata.cs" />
     <Compile Include="Metadata\FormMetadata.cs" />
     <Compile Include="Metadata\FormSectionMetadata.cs" />
@@ -253,6 +254,7 @@
     <Compile Include="Helpers\DataGridViewHelper.cs" />
     <Compile Include="Helpers\MetadataHelper.cs" />
     <Compile Include="Enum\TabEnum.cs" />
+    <Compile Include="Metadata\ViewMetadata.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Controls\MainControl.cs">
       <SubType>UserControl</SubType>

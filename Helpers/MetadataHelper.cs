@@ -80,27 +80,9 @@ namespace Quick_Translator
             return entityMetadataList;
         }
 
-        public static IEnumerable<Entity> RetrieveEntityForms(string entityLogicalName, IOrganizationService orgService)
-        {
-            var query = new QueryExpression("systemform")
-            {
-                ColumnSet = new ColumnSet(true),
-                Criteria = new FilterExpression()
-                {
-                    Conditions =
-                    {
-                        new ConditionExpression("objecttypecode", ConditionOperator.Equal, entityLogicalName),
-                        new ConditionExpression("type", ConditionOperator.In, new[]{2,6,7})
-                    }
-                }
-            };
-
-            return orgService.RetrieveMultiple(query).Entities;
-        }
-
         public static List<FormMetadata> RetrieveFormMetadata(string entityLogicalName, IOrganizationService orgService)
         {
-            var forms = RetrieveEntityForms(entityLogicalName, orgService);
+            var forms = DataHelper.GetEntityFormsByEntityLogicalName(entityLogicalName, orgService);
 
             var formMetadataList = new List<FormMetadata>();
 
@@ -142,7 +124,7 @@ namespace Quick_Translator
             return formMetadataList;
         }
 
-        public static void RetrieveFormFields(Entity form, int lcId, string entityLogicalName,
+        public static void RetrieveFormComponentsMetadata(Entity form, int lcId, string entityLogicalName,
             List<FormFieldMetadata> formFieldMetadataList, List<FormSectionMetadata> formSectionMetadataList, List<FormTabMetadata> formTabMetadataList)
         {
             #region Form XML
@@ -156,24 +138,24 @@ namespace Quick_Translator
 
             foreach (XmlNode cellNode in cellNodesHeader)
             {
-                ExtractField(cellNode, formFieldMetadataList, form, null, null, entityLogicalName, lcId);
+                ExtractFormFieldMetadata(cellNode, formFieldMetadataList, form, null, null, entityLogicalName, lcId);
             }
             #endregion Extract Form Header
 
             #region Extract Form Fields
             foreach (XmlNode tabNode in formXML.SelectNodes("//tab"))
             {
-                var tabName = ExtractTabName(tabNode, lcId, formTabMetadataList, form, entityLogicalName);
+                var tabName = ExtractTabMetadata(tabNode, lcId, formTabMetadataList, form, entityLogicalName);
 
                 foreach (XmlNode sectionNode in tabNode.SelectNodes("columns/column/sections/section"))
                 {
-                    var sectionName = ExtractSection(sectionNode, lcId, formSectionMetadataList, form,
+                    var sectionName = ExtractSectionMetadata(sectionNode, lcId, formSectionMetadataList, form,
                         tabName, entityLogicalName);
 
                     #region Extract Labels
                     foreach (XmlNode labelNode in sectionNode.SelectNodes("rows/row/cell"))
                     {
-                        ExtractField(labelNode, formFieldMetadataList, form, tabName, sectionName,
+                        ExtractFormFieldMetadata(labelNode, formFieldMetadataList, form, tabName, sectionName,
                             entityLogicalName, lcId);
                     }
                     #endregion Extract Labels
@@ -185,14 +167,63 @@ namespace Quick_Translator
                 var cellNodes = formXML.DocumentElement.SelectNodes("footer/rows/row/cell");
                 foreach (XmlNode cellNode in cellNodes)
                 {
-                    ExtractField(cellNode, formFieldMetadataList, form, null, null, entityLogicalName, lcId);
+                    ExtractFormFieldMetadata(cellNode, formFieldMetadataList, form, null, null, entityLogicalName, lcId);
                 }
                 #endregion Extract Form Footer
             }
             return;
         }
 
-        private static void ExtractField(XmlNode cellNode, List<FormFieldMetadata> formFieldMetadataList, Entity form, string tabName,
+        public static void RetrieveViewsMetadata(IOrganizationService orgService, List<ViewMetadata> viewMetadataList, int objectTypeCode)
+        {
+            var views = DataHelper.GetViewsByObjectTypeCode(objectTypeCode, orgService);
+
+            foreach (var view in views)
+            {
+                var viewMetadata = viewMetadataList.FirstOrDefault(prm => prm.Id == view.Id);
+                if (viewMetadata == null)
+                {
+                    viewMetadata = new ViewMetadata
+                    {
+                        Id = view.Id,
+                        Entity = view.GetAttributeValue<string>("returnedtypecode"),
+                        Type = view.GetAttributeValue<int>("querytype"),
+                        Names = new Dictionary<int, string>(),
+                        Descriptions = new Dictionary<int, string>()
+                    };
+                    viewMetadataList.Add(viewMetadata);
+                }
+
+                RetrieveLocLabelsRequest request = new RetrieveLocLabelsRequest
+                {
+                    AttributeName = "name",
+                    EntityMoniker = new EntityReference("savedquery", view.Id)
+                };
+
+                RetrieveLocLabelsResponse response = (RetrieveLocLabelsResponse)orgService.Execute(request);
+
+                var locLabelList = response.Label.LocalizedLabels.OrderByDescending(prm => prm.LanguageCode);
+                foreach (var locLabel in locLabelList)
+                {
+                    viewMetadata.Names.Add(locLabel.LanguageCode, locLabel.Label);
+                }
+
+                request = new RetrieveLocLabelsRequest
+                {
+                    AttributeName = "description",
+                    EntityMoniker = new EntityReference("savedquery", view.Id)
+                };
+
+                response = (RetrieveLocLabelsResponse)orgService.Execute(request);
+                locLabelList = response.Label.LocalizedLabels.OrderByDescending(prm => prm.LanguageCode);
+                foreach (var locLabel in locLabelList)
+                {
+                    viewMetadata.Descriptions.Add(locLabel.LanguageCode, locLabel.Label);
+                }
+            }
+        }
+
+        private static void ExtractFormFieldMetadata(XmlNode cellNode, List<FormFieldMetadata> formFieldMetadataList, Entity form, string tabName,
             string sectionName, string entityLogicalName, int lcId)
         {
             if (cellNode.Attributes == null)
@@ -239,7 +270,7 @@ namespace Quick_Translator
             formFieldMetadata.Names.Add(lcId, labelDescription == null ? string.Empty : labelDescription.Value);
         }
 
-        private static string ExtractTabName(XmlNode tabNode, int lcId, List<FormTabMetadata> formTabMetadataList, Entity form,
+        private static string ExtractTabMetadata(XmlNode tabNode, int lcId, List<FormTabMetadata> formTabMetadataList, Entity form,
             string entityLogicalName)
         {
             if (tabNode.Attributes == null || tabNode.Attributes["id"] == null)
@@ -281,7 +312,7 @@ namespace Quick_Translator
             return tabName;
         }
 
-        public static string ExtractSection(XmlNode sectionNode, int lcId, List<FormSectionMetadata> formSectionMetadataList, Entity form, string tabName, string entityLogicalName)
+        public static string ExtractSectionMetadata(XmlNode sectionNode, int lcId, List<FormSectionMetadata> formSectionMetadataList, Entity form, string tabName, string entityLogicalName)
         {
             if (sectionNode.Attributes == null || sectionNode.Attributes["id"] == null)
                 return string.Empty;
