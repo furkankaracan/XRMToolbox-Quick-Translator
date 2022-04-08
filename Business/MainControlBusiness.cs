@@ -12,15 +12,10 @@ namespace Quick_Translator
 {
     public class MainControlBusiness
     {
-        public static void LoadAttributesTab(EntityMetadata entityMetadata, DataGridView dgvAttributes, bool indexChanged)
+        public static void LoadAttributesTab(EntityMetadata entityMetadata, DataGridView dgvAttributes, bool entityChanged)
         {
-            ClearDataGridViewIfIndexChanged(indexChanged, dgvAttributes);
-
             int rowIndex = 0;
-            var attributes = entityMetadata.Attributes;
-            attributes = attributes.OrderBy(prm => prm.LogicalName).ToArray<AttributeMetadata>();
-
-            foreach (var attr in attributes)
+            foreach (var attr in entityMetadata.Attributes.OrderBy(prm => prm.LogicalName))
             {
                 if (attr.IsCustomizable.Value == false) continue;
 
@@ -38,10 +33,8 @@ namespace Quick_Translator
             }
         }
 
-        public static void LoadFormsTab(IOrganizationService orgService, string entityLogicalName, DataGridView dgvForms, bool indexChanged)
+        public static void LoadFormsTab(IOrganizationService orgService, string entityLogicalName, DataGridView dgvForms, bool entityChanged)
         {
-            ClearDataGridViewIfIndexChanged(indexChanged, dgvForms);
-
             var formMetadataList = MetadataHelper.RetrieveFormMetadata(entityLogicalName, orgService);
 
             int rowIndex = 0;
@@ -60,10 +53,8 @@ namespace Quick_Translator
             }
         }
 
-        public static void LoadFormFieldsTab(IOrganizationService orgService, string entityLogicalName, DataGridView dgvFormFields, bool indexChanged, List<int> lcIdList)
+        public static void LoadFormFieldsTab(IOrganizationService orgService, string entityLogicalName, DataGridView dgvFormFields, bool entityChanged, List<int> lcIdList)
         {
-            ClearDataGridViewIfIndexChanged(indexChanged, dgvFormFields);
-
             #region User Settings
             var setting = DataHelper.GetCurrentUserSettings(orgService);
             var userSettingLcid = setting.GetAttributeValue<int>("uilanguageid");
@@ -120,13 +111,12 @@ namespace Quick_Translator
             }
         }
 
-        public static void LoadViewsTab(IOrganizationService orgService, EntityMetadata entityMetadata, DataGridView dgvViews, bool indexChanged, List<int> lcIdList)
+        public static void LoadViewsTab(IOrganizationService orgService, EntityMetadata entityMetadata, DataGridView dgvViews, bool entityChanged, List<int> lcIdList)
         {
-            ClearDataGridViewIfIndexChanged(indexChanged, dgvViews);
-
             var viewMetadaList = new List<ViewMetadata>();
 
             MetadataHelper.RetrieveViewsMetadata(orgService, viewMetadaList, entityMetadata.ObjectTypeCode.Value);
+            viewMetadaList = viewMetadaList.OrderBy(prm => prm.Type).ToList();
 
             int rowIndex = 0;
             foreach (var viewMetadata in viewMetadaList)
@@ -145,6 +135,113 @@ namespace Quick_Translator
             }
         }
 
+        public static void LoadBooleansTab(IOrganizationService service, EntityMetadata entityMetadata, DataGridView dgvBooleans, bool entityChanged, List<int> lcIdList)
+        {            
+            int rowIndex = 0;
+            foreach (var attribute in entityMetadata.Attributes.OrderBy(prm => prm.LogicalName))
+            {
+                if (attribute.AttributeType == null
+                        || attribute.AttributeType.Value != AttributeTypeCode.Boolean
+                        || !attribute.MetadataId.HasValue)
+                    continue;
+
+                var booleanAttributeMetadata = (BooleanAttributeMetadata)attribute;
+                if (booleanAttributeMetadata.OptionSet?.IsGlobal ?? false)
+                    continue;
+
+                var labelList = new List<string>();
+                labelList.Add(attribute.LogicalName);
+
+                foreach (var lcId in lcIdList)
+                {
+                    if (booleanAttributeMetadata.OptionSet.FalseOption.Label != null)
+                    {
+                        var optionLabel = booleanAttributeMetadata.OptionSet.FalseOption.Label.LocalizedLabels.FirstOrDefault(l => l.LanguageCode == lcId);
+                        if (optionLabel != null)
+                        {
+                            labelList.Add(optionLabel.Label);
+                        }
+                    }
+                }
+
+                foreach (var lcId in lcIdList)
+                {
+                    if (booleanAttributeMetadata.OptionSet.TrueOption.Label != null)
+                    {
+                        var optionLabel = booleanAttributeMetadata.OptionSet.FalseOption.Label.LocalizedLabels.FirstOrDefault(l => l.LanguageCode == lcId);
+                        if (optionLabel != null)
+                        {
+                            labelList.Add(optionLabel.Label);
+                        }
+                    }
+                }
+                dgvBooleans.Rows.Insert(rowIndex, labelList.ToArray());
+                dgvBooleans.Rows[rowIndex].Tag = attribute;
+                rowIndex++;
+            }
+        }
+
+        public static void LoadOptionSets(IOrganizationService service, EntityMetadata entityMetadata, DataGridView dgvPicklists, bool entityChanged, List<int> lcIdList)
+        {
+            int rowIndex = 0;
+            foreach (var attribute in entityMetadata.Attributes.OrderBy(prm => prm.LogicalName))
+            {
+                if (attribute.AttributeType == null
+                      || attribute.AttributeType.Value != AttributeTypeCode.Picklist
+                      && attribute.AttributeType.Value != AttributeTypeCode.State
+                      && attribute.AttributeType.Value != AttributeTypeCode.Status
+                      && !(attribute is MultiSelectPicklistAttributeMetadata)
+                      || !attribute.MetadataId.HasValue)
+                    continue;
+
+                OptionSetMetadata optionSetMetadata = null;
+
+                switch (attribute.AttributeType.Value)
+                {
+                    case AttributeTypeCode.Picklist:
+                        optionSetMetadata = ((PicklistAttributeMetadata)attribute).OptionSet;
+                        break;
+
+                    case AttributeTypeCode.State:
+                        optionSetMetadata = ((StateAttributeMetadata)attribute).OptionSet;
+                        break;
+
+                    case AttributeTypeCode.Status:
+                        optionSetMetadata = ((StatusAttributeMetadata)attribute).OptionSet;
+                        break;
+
+                    case AttributeTypeCode.Virtual:
+                        optionSetMetadata = ((MultiSelectPicklistAttributeMetadata)attribute).OptionSet;
+                        break;
+                }
+
+                if (optionSetMetadata.IsGlobal.Value)
+                    continue;
+
+                foreach (var option in optionSetMetadata.Options.OrderBy(o => o.Value))
+                {
+                    var labelList = new List<string>();
+                    labelList.Add(attribute.LogicalName);
+
+                    foreach (var lcId in lcIdList)
+                    {
+                        if (option.Label != null)
+                        {
+                            var optionLabel = option.Label.LocalizedLabels.FirstOrDefault(l => l.LanguageCode == lcId);
+                            if (optionLabel != null)
+                            {
+                                labelList.Add(optionLabel.Label);
+                            }
+                        }
+                    }
+
+                    dgvPicklists.Rows.Insert(rowIndex, labelList.ToArray());
+                    dgvPicklists.Rows[rowIndex].Tag = attribute;
+                    rowIndex++;
+                }
+            }
+        }
+
         public static void AddLanguageColumns(DataGridView dvg, int[] lcIds)
         {
             foreach (int lcid in lcIds)
@@ -160,17 +257,6 @@ namespace Quick_Translator
             setting["uilanguageid"] = lcId;
             setting["helplanguageid"] = lcId;
             orgService.Update(setting);
-        }
-
-        private static void ClearDataGridViewIfIndexChanged(bool indexChanged, DataGridView dgv)
-        {
-            if (!indexChanged)
-            {
-                if (dgv.Rows.Count > 0)
-                    return;
-            }
-            else if (dgv.Rows.Count > 0)
-                dgv.Rows.Clear();
         }
     }
 }

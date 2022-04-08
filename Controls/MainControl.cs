@@ -134,6 +134,24 @@ namespace Quick_Translator
         {
             if (lvEntities.SelectedIndices.Count <= 0) return;
 
+            if (dgvAttributes.Rows.Count > 0)
+                dgvAttributes.Rows.Clear();
+
+            if (dgvForms.Rows.Count > 0)
+                dgvForms.Rows.Clear();
+
+            if (dgvFormFields.Rows.Count > 0)
+                dgvFormFields.Rows.Clear();
+
+            if (dgvViews.Rows.Count > 0)
+                dgvViews.Rows.Clear();
+
+            if (dgvViews.Rows.Count > 0)
+                dgvViews.Rows.Clear();
+
+            if (dgvPicklists.Rows.Count > 0)
+                dgvPicklists.Rows.Clear();
+
             LoadEntityMetada(true);
         }
 
@@ -142,7 +160,7 @@ namespace Quick_Translator
             LoadEntityMetada(false);
         }
 
-        private void LoadEntityMetada(bool indexChanged)
+        private void LoadEntityMetada(bool entityChanged)
         {
             if (lvEntities?.SelectedIndices.Count < 1)
                 return;
@@ -165,17 +183,47 @@ namespace Quick_Translator
             };
 
             var response = (RetrieveEntityResponse)Service.Execute(request);
-
             var entityMetadata = response.EntityMetadata;
 
-            if (tcSelectedEntityTabs.SelectedIndex == 0)
-                MainControlBusiness.LoadAttributesTab(entityMetadata, dgvAttributes, indexChanged);
-            else if (tcSelectedEntityTabs.SelectedIndex == 1)
-                MainControlBusiness.LoadFormsTab(Service, entityMetadata.LogicalName, dgvForms, indexChanged);
-            else if (tcSelectedEntityTabs.SelectedIndex == 2)
-                MainControlBusiness.LoadFormFieldsTab(Service, entityMetadata.LogicalName, dgvFormFields, indexChanged, lcIdList);
-            else if (tcSelectedEntityTabs.SelectedIndex == 3)
-                MainControlBusiness.LoadViewsTab(Service, entityMetadata, dgvViews, indexChanged, lcIdList);
+
+            switch (tcSelectedEntityTabs.SelectedIndex)
+            {
+                case (int)TabEnum.Attributes:
+                    if (dgvAttributes.Rows.Count > 0 && !entityChanged)
+                        return;
+                    MainControlBusiness.LoadAttributesTab(entityMetadata, dgvAttributes, entityChanged);
+                    break;
+
+                case (int)TabEnum.Form:
+                    if (dgvForms.Rows.Count > 0 && !entityChanged)
+                        return;
+                    MainControlBusiness.LoadFormsTab(Service, entityMetadata.LogicalName, dgvForms, entityChanged);
+                    break;
+
+                case (int)TabEnum.FormFields:
+                    if (dgvFormFields.Rows.Count > 0 && !entityChanged)
+                        return;
+                    MainControlBusiness.LoadFormFieldsTab(Service, entityMetadata.LogicalName, dgvFormFields, entityChanged, lcIdList);
+                    break;
+
+                case (int)TabEnum.Views:
+                    if (dgvViews.Rows.Count > 0 && !entityChanged)
+                        return;
+                    MainControlBusiness.LoadViewsTab(Service, entityMetadata, dgvViews, entityChanged, lcIdList);
+                    break;
+
+                case (int)TabEnum.Booleans:
+                    if (dgvBooleans.Rows.Count > 0 && !entityChanged)
+                        return;
+                    MainControlBusiness.LoadBooleansTab(Service, entityMetadata, dgvBooleans, entityChanged, lcIdList);
+                    break;
+
+                case (int)TabEnum.Picklists:
+                    if (dgvPicklists.Rows.Count > 0 && !entityChanged)
+                        return;
+                    MainControlBusiness.LoadOptionSets(Service, entityMetadata, dgvPicklists, entityChanged, lcIdList);
+                    break;
+            }
         }
 
         private void MainControl_Load(object sender, EventArgs e)
