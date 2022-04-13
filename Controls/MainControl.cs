@@ -20,6 +20,13 @@ namespace Quick_Translator
         private List<int> lcIdList = new List<int>();
         private List<EntityMetadata> entityMetadataList;
 
+        private List<int> updatedAttributes = new List<int>();
+        private List<int> updatedForms = new List<int>();
+        private List<int> updatedFomFields = new List<int>();
+        private List<int> updatedViews = new List<int>();
+        private List<int> updatedBooleans = new List<int>();
+        private List<int> updatedOptionSets = new List<int>();
+
         #endregion variables
 
         #region Constructor 
@@ -33,6 +40,27 @@ namespace Quick_Translator
         private void tsbClose_Click(object sender, EventArgs e)
         {
             CloseTool();
+        }
+
+        private void tsbSavePublish_Click(object sender, EventArgs e)
+        {
+            if(updatedAttributes.Any())
+                MainControlBusiness.PublishChangedAttributeTranslations(dgvAttributes, updatedAttributes);
+
+            if (updatedForms.Any())
+                MainControlBusiness.PublishChangedFormTranslations(dgvForms, updatedForms);
+
+            if (updatedFomFields.Any())
+                MainControlBusiness.PublishChangedFormFieldTranslations(Service,dgvFormFields, updatedFomFields);
+
+            if (updatedViews.Any())
+                MainControlBusiness.PublishChangedAttributeTranslations(dgvViews, updatedViews);
+
+            if (updatedBooleans.Any())
+                MainControlBusiness.PublishChangedAttributeTranslations(dgvBooleans, updatedBooleans);
+
+            if (updatedOptionSets.Any())
+                MainControlBusiness.PublishChangedAttributeTranslations(dgvPicklists, updatedOptionSets);
         }
 
         /// <summary>
@@ -166,6 +194,8 @@ namespace Quick_Translator
                 return;
 
             int selectedIndex = lvEntities.SelectedIndices[0];
+            gbSelectedEntity.Text = $"Selected Entity: {lvEntities.Items[selectedIndex].Text}";
+
             var filters = EntityFilters.Default;
 
             if (tcSelectedEntityTabs.SelectedIndex == (int)TabEnum.Form || tcSelectedEntityTabs.SelectedIndex == (int)TabEnum.Views)
@@ -191,37 +221,37 @@ namespace Quick_Translator
                 case (int)TabEnum.Attributes:
                     if (dgvAttributes.Rows.Count > 0 && !entityChanged)
                         return;
-                    MainControlBusiness.LoadAttributesTab(entityMetadata, dgvAttributes, entityChanged);
+                    MainControlBusiness.LoadAttributesTab(entityMetadata, dgvAttributes);
                     break;
 
                 case (int)TabEnum.Form:
                     if (dgvForms.Rows.Count > 0 && !entityChanged)
                         return;
-                    MainControlBusiness.LoadFormsTab(Service, entityMetadata.LogicalName, dgvForms, entityChanged);
+                    MainControlBusiness.LoadFormsTab(Service, entityMetadata.LogicalName, dgvForms);
                     break;
 
                 case (int)TabEnum.FormFields:
                     if (dgvFormFields.Rows.Count > 0 && !entityChanged)
                         return;
-                    MainControlBusiness.LoadFormFieldsTab(Service, entityMetadata.LogicalName, dgvFormFields, entityChanged, lcIdList);
+                    MainControlBusiness.LoadFormFieldsTab(Service, entityMetadata.LogicalName, dgvFormFields, lcIdList);
                     break;
 
                 case (int)TabEnum.Views:
                     if (dgvViews.Rows.Count > 0 && !entityChanged)
                         return;
-                    MainControlBusiness.LoadViewsTab(Service, entityMetadata, dgvViews, entityChanged, lcIdList);
+                    MainControlBusiness.LoadViewsTab(Service, entityMetadata, dgvViews);
                     break;
 
                 case (int)TabEnum.Booleans:
                     if (dgvBooleans.Rows.Count > 0 && !entityChanged)
                         return;
-                    MainControlBusiness.LoadBooleansTab(Service, entityMetadata, dgvBooleans, entityChanged, lcIdList);
+                    MainControlBusiness.LoadBooleansTab(entityMetadata, dgvBooleans, lcIdList);
                     break;
 
                 case (int)TabEnum.Picklists:
                     if (dgvPicklists.Rows.Count > 0 && !entityChanged)
                         return;
-                    MainControlBusiness.LoadOptionSets(Service, entityMetadata, dgvPicklists, entityChanged, lcIdList);
+                    MainControlBusiness.LoadOptionSets(entityMetadata, dgvPicklists, lcIdList);
                     break;
             }
         }
@@ -240,6 +270,54 @@ namespace Quick_Translator
             MainControlBusiness.AddLanguageColumns(dgvViews, lcIds);
             MainControlBusiness.AddLanguageColumns(dgvBooleans, lcIds);
             MainControlBusiness.AddLanguageColumns(dgvPicklists, lcIds);
+        }
+
+        private void dgvAttributes_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                return;
+
+            updatedAttributes.Add(e.RowIndex);
+        }
+
+        private void dgvForms_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                return;
+
+            updatedForms.Add(e.RowIndex);
+        }
+
+        private void dgvFormFields_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                return;
+
+            updatedFomFields.Add(e.RowIndex);
+        }
+
+        private void dgvViews_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                return;
+
+            updatedViews.Add(e.RowIndex);
+        }
+
+        private void dgvBooleans_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                return;
+
+            updatedBooleans.Add(e.RowIndex);
+        }
+
+        private void dgvPicklists_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                return;
+
+            updatedOptionSets.Add(e.RowIndex);
         }
     }
 }

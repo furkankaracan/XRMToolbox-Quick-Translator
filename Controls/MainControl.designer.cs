@@ -32,6 +32,7 @@ namespace Quick_Translator
             this.toolStripMenu = new System.Windows.Forms.ToolStrip();
             this.tsbClose = new System.Windows.Forms.ToolStripButton();
             this.tssSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsbSavePublish = new System.Windows.Forms.ToolStripButton();
             this.cbCustomEntities = new System.Windows.Forms.CheckBox();
             this.tbFind = new System.Windows.Forms.TextBox();
             this.lblFind = new System.Windows.Forms.Label();
@@ -50,19 +51,19 @@ namespace Quick_Translator
             this.dgvForms = new System.Windows.Forms.DataGridView();
             this.tpFormFields = new System.Windows.Forms.TabPage();
             this.dgvFormFields = new System.Windows.Forms.DataGridView();
+            this.formName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tabName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.sectionName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.formFieldsLogicalName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tpViews = new System.Windows.Forms.TabPage();
             this.dgvViews = new System.Windows.Forms.DataGridView();
+            this.viewType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tpBooleans = new System.Windows.Forms.TabPage();
             this.dgvBooleans = new System.Windows.Forms.DataGridView();
             this.boolLogicalName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tpPicklists = new System.Windows.Forms.TabPage();
             this.dgvPicklists = new System.Windows.Forms.DataGridView();
             this.picklistLogicalName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.formName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tabName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.sectionName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.formFieldsLogicalName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.viewType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStripMenu.SuspendLayout();
             this.gbSelectEntity.SuspendLayout();
             this.gbSelectedEntity.SuspendLayout();
@@ -86,11 +87,12 @@ namespace Quick_Translator
             this.toolStripMenu.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.toolStripMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbClose,
-            this.tssSeparator1});
+            this.tssSeparator1,
+            this.tsbSavePublish});
             this.toolStripMenu.Location = new System.Drawing.Point(0, 0);
             this.toolStripMenu.Name = "toolStripMenu";
             this.toolStripMenu.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
-            this.toolStripMenu.Size = new System.Drawing.Size(1852, 27);
+            this.toolStripMenu.Size = new System.Drawing.Size(1856, 27);
             this.toolStripMenu.TabIndex = 4;
             this.toolStripMenu.Text = "toolStrip1";
             // 
@@ -106,6 +108,15 @@ namespace Quick_Translator
             // 
             this.tssSeparator1.Name = "tssSeparator1";
             this.tssSeparator1.Size = new System.Drawing.Size(6, 27);
+            // 
+            // tsbSavePublish
+            // 
+            this.tsbSavePublish.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsbSavePublish.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbSavePublish.Name = "tsbSavePublish";
+            this.tsbSavePublish.Size = new System.Drawing.Size(124, 24);
+            this.tsbSavePublish.Text = "Save and Publish";
+            this.tsbSavePublish.Click += new System.EventHandler(this.tsbSavePublish_Click);
             // 
             // cbCustomEntities
             // 
@@ -224,7 +235,7 @@ namespace Quick_Translator
             this.gbSelectedEntity.Size = new System.Drawing.Size(1452, 886);
             this.gbSelectedEntity.TabIndex = 9;
             this.gbSelectedEntity.TabStop = false;
-            this.gbSelectedEntity.Text = "Selected Entity: {0}";
+            this.gbSelectedEntity.Text = "Selected Entity:";
             // 
             // tcSelectedEntityTabs
             // 
@@ -264,11 +275,12 @@ namespace Quick_Translator
             this.dgvAttributes.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.attrLogicalName});
             this.dgvAttributes.Location = new System.Drawing.Point(7, 6);
-            this.dgvAttributes.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgvAttributes.Margin = new System.Windows.Forms.Padding(4);
             this.dgvAttributes.Name = "dgvAttributes";
             this.dgvAttributes.RowHeadersWidth = 51;
             this.dgvAttributes.Size = new System.Drawing.Size(1431, 801);
             this.dgvAttributes.TabIndex = 0;
+            this.dgvAttributes.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAttributes_CellValueChanged);
             // 
             // attrLogicalName
             // 
@@ -297,11 +309,12 @@ namespace Quick_Translator
             this.dgvForms.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dgvForms.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvForms.Location = new System.Drawing.Point(7, 6);
-            this.dgvForms.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgvForms.Margin = new System.Windows.Forms.Padding(4);
             this.dgvForms.Name = "dgvForms";
             this.dgvForms.RowHeadersWidth = 51;
             this.dgvForms.Size = new System.Drawing.Size(1431, 801);
             this.dgvForms.TabIndex = 0;
+            this.dgvForms.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvForms_CellValueChanged);
             // 
             // tpFormFields
             // 
@@ -327,108 +340,12 @@ namespace Quick_Translator
             this.sectionName,
             this.formFieldsLogicalName});
             this.dgvFormFields.Location = new System.Drawing.Point(7, 6);
-            this.dgvFormFields.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgvFormFields.Margin = new System.Windows.Forms.Padding(4);
             this.dgvFormFields.Name = "dgvFormFields";
             this.dgvFormFields.RowHeadersWidth = 51;
             this.dgvFormFields.Size = new System.Drawing.Size(1438, 801);
             this.dgvFormFields.TabIndex = 0;
-            // 
-            // tpViews
-            // 
-            this.tpViews.BackColor = System.Drawing.SystemColors.Control;
-            this.tpViews.Controls.Add(this.dgvViews);
-            this.tpViews.Location = new System.Drawing.Point(4, 29);
-            this.tpViews.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tpViews.Name = "tpViews";
-            this.tpViews.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tpViews.Size = new System.Drawing.Size(1445, 813);
-            this.tpViews.TabIndex = 3;
-            this.tpViews.Text = "Views";
-            // 
-            // dgvViews
-            // 
-            this.dgvViews.AllowUserToAddRows = false;
-            this.dgvViews.AllowUserToDeleteRows = false;
-            this.dgvViews.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.dgvViews.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvViews.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.viewType});
-            this.dgvViews.Location = new System.Drawing.Point(7, 6);
-            this.dgvViews.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.dgvViews.Name = "dgvViews";
-            this.dgvViews.RowHeadersWidth = 51;
-            this.dgvViews.Size = new System.Drawing.Size(1431, 801);
-            this.dgvViews.TabIndex = 0;
-            // 
-            // tpBooleans
-            // 
-            this.tpBooleans.BackColor = System.Drawing.SystemColors.Control;
-            this.tpBooleans.Controls.Add(this.dgvBooleans);
-            this.tpBooleans.Location = new System.Drawing.Point(4, 29);
-            this.tpBooleans.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tpBooleans.Name = "tpBooleans";
-            this.tpBooleans.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tpBooleans.Size = new System.Drawing.Size(1445, 813);
-            this.tpBooleans.TabIndex = 4;
-            this.tpBooleans.Text = "Booleans";
-            // 
-            // dgvBooleans
-            // 
-            this.dgvBooleans.AllowUserToAddRows = false;
-            this.dgvBooleans.AllowUserToDeleteRows = false;
-            this.dgvBooleans.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.dgvBooleans.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvBooleans.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.boolLogicalName});
-            this.dgvBooleans.Location = new System.Drawing.Point(7, 6);
-            this.dgvBooleans.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.dgvBooleans.Name = "dgvBooleans";
-            this.dgvBooleans.RowHeadersWidth = 51;
-            this.dgvBooleans.Size = new System.Drawing.Size(1431, 801);
-            this.dgvBooleans.TabIndex = 0;
-            // 
-            // boolLogicalName
-            // 
-            this.boolLogicalName.HeaderText = "Logical Name";
-            this.boolLogicalName.MinimumWidth = 6;
-            this.boolLogicalName.Name = "boolLogicalName";
-            this.boolLogicalName.ReadOnly = true;
-            this.boolLogicalName.Width = 150;
-            // 
-            // tpPicklists
-            // 
-            this.tpPicklists.BackColor = System.Drawing.SystemColors.Control;
-            this.tpPicklists.Controls.Add(this.dgvPicklists);
-            this.tpPicklists.Location = new System.Drawing.Point(4, 29);
-            this.tpPicklists.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tpPicklists.Name = "tpPicklists";
-            this.tpPicklists.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tpPicklists.Size = new System.Drawing.Size(1445, 813);
-            this.tpPicklists.TabIndex = 5;
-            this.tpPicklists.Text = "Picklists";
-            // 
-            // dgvPicklists
-            // 
-            this.dgvPicklists.AllowUserToAddRows = false;
-            this.dgvPicklists.AllowUserToDeleteRows = false;
-            this.dgvPicklists.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.dgvPicklists.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvPicklists.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.picklistLogicalName});
-            this.dgvPicklists.Location = new System.Drawing.Point(7, 6);
-            this.dgvPicklists.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.dgvPicklists.Name = "dgvPicklists";
-            this.dgvPicklists.RowHeadersWidth = 51;
-            this.dgvPicklists.Size = new System.Drawing.Size(1431, 801);
-            this.dgvPicklists.TabIndex = 0;
-            // 
-            // picklistLogicalName
-            // 
-            this.picklistLogicalName.HeaderText = "Logical Name";
-            this.picklistLogicalName.MinimumWidth = 6;
-            this.picklistLogicalName.Name = "picklistLogicalName";
-            this.picklistLogicalName.ReadOnly = true;
-            this.picklistLogicalName.Width = 150;
+            this.dgvFormFields.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvFormFields_CellValueChanged);
             // 
             // formName
             // 
@@ -462,6 +379,34 @@ namespace Quick_Translator
             this.formFieldsLogicalName.ReadOnly = true;
             this.formFieldsLogicalName.Width = 150;
             // 
+            // tpViews
+            // 
+            this.tpViews.BackColor = System.Drawing.SystemColors.Control;
+            this.tpViews.Controls.Add(this.dgvViews);
+            this.tpViews.Location = new System.Drawing.Point(4, 29);
+            this.tpViews.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tpViews.Name = "tpViews";
+            this.tpViews.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tpViews.Size = new System.Drawing.Size(1445, 813);
+            this.tpViews.TabIndex = 3;
+            this.tpViews.Text = "Views";
+            // 
+            // dgvViews
+            // 
+            this.dgvViews.AllowUserToAddRows = false;
+            this.dgvViews.AllowUserToDeleteRows = false;
+            this.dgvViews.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.dgvViews.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvViews.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.viewType});
+            this.dgvViews.Location = new System.Drawing.Point(11, 16);
+            this.dgvViews.Margin = new System.Windows.Forms.Padding(4);
+            this.dgvViews.Name = "dgvViews";
+            this.dgvViews.RowHeadersWidth = 51;
+            this.dgvViews.Size = new System.Drawing.Size(1431, 801);
+            this.dgvViews.TabIndex = 0;
+            this.dgvViews.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvViews_CellValueChanged);
+            // 
             // viewType
             // 
             this.viewType.HeaderText = "View Type";
@@ -470,6 +415,78 @@ namespace Quick_Translator
             this.viewType.ReadOnly = true;
             this.viewType.Width = 150;
             // 
+            // tpBooleans
+            // 
+            this.tpBooleans.BackColor = System.Drawing.SystemColors.Control;
+            this.tpBooleans.Controls.Add(this.dgvBooleans);
+            this.tpBooleans.Location = new System.Drawing.Point(4, 29);
+            this.tpBooleans.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tpBooleans.Name = "tpBooleans";
+            this.tpBooleans.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tpBooleans.Size = new System.Drawing.Size(1445, 813);
+            this.tpBooleans.TabIndex = 4;
+            this.tpBooleans.Text = "Booleans";
+            // 
+            // dgvBooleans
+            // 
+            this.dgvBooleans.AllowUserToAddRows = false;
+            this.dgvBooleans.AllowUserToDeleteRows = false;
+            this.dgvBooleans.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.dgvBooleans.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvBooleans.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.boolLogicalName});
+            this.dgvBooleans.Location = new System.Drawing.Point(7, 6);
+            this.dgvBooleans.Margin = new System.Windows.Forms.Padding(4);
+            this.dgvBooleans.Name = "dgvBooleans";
+            this.dgvBooleans.RowHeadersWidth = 51;
+            this.dgvBooleans.Size = new System.Drawing.Size(1431, 801);
+            this.dgvBooleans.TabIndex = 0;
+            this.dgvBooleans.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvBooleans_CellValueChanged);
+            // 
+            // boolLogicalName
+            // 
+            this.boolLogicalName.HeaderText = "Logical Name";
+            this.boolLogicalName.MinimumWidth = 6;
+            this.boolLogicalName.Name = "boolLogicalName";
+            this.boolLogicalName.ReadOnly = true;
+            this.boolLogicalName.Width = 150;
+            // 
+            // tpPicklists
+            // 
+            this.tpPicklists.BackColor = System.Drawing.SystemColors.Control;
+            this.tpPicklists.Controls.Add(this.dgvPicklists);
+            this.tpPicklists.Location = new System.Drawing.Point(4, 29);
+            this.tpPicklists.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tpPicklists.Name = "tpPicklists";
+            this.tpPicklists.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tpPicklists.Size = new System.Drawing.Size(1445, 813);
+            this.tpPicklists.TabIndex = 5;
+            this.tpPicklists.Text = "Picklists";
+            // 
+            // dgvPicklists
+            // 
+            this.dgvPicklists.AllowUserToAddRows = false;
+            this.dgvPicklists.AllowUserToDeleteRows = false;
+            this.dgvPicklists.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.dgvPicklists.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvPicklists.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.picklistLogicalName});
+            this.dgvPicklists.Location = new System.Drawing.Point(7, 6);
+            this.dgvPicklists.Margin = new System.Windows.Forms.Padding(4);
+            this.dgvPicklists.Name = "dgvPicklists";
+            this.dgvPicklists.RowHeadersWidth = 51;
+            this.dgvPicklists.Size = new System.Drawing.Size(1431, 801);
+            this.dgvPicklists.TabIndex = 0;
+            this.dgvPicklists.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPicklists_CellValueChanged);
+            // 
+            // picklistLogicalName
+            // 
+            this.picklistLogicalName.HeaderText = "Logical Name";
+            this.picklistLogicalName.MinimumWidth = 6;
+            this.picklistLogicalName.Name = "picklistLogicalName";
+            this.picklistLogicalName.ReadOnly = true;
+            this.picklistLogicalName.Width = 150;
+            // 
             // MainControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -477,9 +494,9 @@ namespace Quick_Translator
             this.Controls.Add(this.gbSelectedEntity);
             this.Controls.Add(this.gbSelectEntity);
             this.Controls.Add(this.toolStripMenu);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "MainControl";
-            this.Size = new System.Drawing.Size(1852, 927);
+            this.Size = new System.Drawing.Size(1856, 968);
             this.Load += new System.EventHandler(this.MainControl_Load);
             this.toolStripMenu.ResumeLayout(false);
             this.toolStripMenu.PerformLayout();
@@ -539,5 +556,6 @@ namespace Quick_Translator
         private System.Windows.Forms.DataGridViewTextBoxColumn sectionName;
         private System.Windows.Forms.DataGridViewTextBoxColumn formFieldsLogicalName;
         private System.Windows.Forms.DataGridViewTextBoxColumn viewType;
+        private System.Windows.Forms.ToolStripButton tsbSavePublish;
     }
 }
