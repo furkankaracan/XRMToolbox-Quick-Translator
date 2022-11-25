@@ -244,6 +244,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\DataHelper.cs" />
+    <Compile Include="Helpers\RequestsHelper.cs" />
     <Compile Include="Helpers\ViewTypeHelper.cs" />
     <Compile Include="Metadata\FormFieldMetadata.cs" />
     <Compile Include="Metadata\FormMetadata.cs" />

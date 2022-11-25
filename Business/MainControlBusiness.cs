@@ -1,19 +1,23 @@
-﻿using System.Windows.Forms;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Crm.Sdk.Messages;
+﻿using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
-using System.Xml;
-using System;
-using System.Threading;
-using System.Data;
 using Microsoft.Xrm.Sdk.Query;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Threading;
+using System.Windows.Forms;
+using System.Xml;
 
 namespace Quick_Translator
 {
     public class MainControlBusiness
     {
+
+        private ExecuteMultipleRequest request;
+
         public static void LoadAttributesTab(EntityMetadata entityMetadata, DataGridView dgvAttributes)
         {
             int rowIndex = 0;
@@ -21,8 +25,10 @@ namespace Quick_Translator
             {
                 if (attr.IsCustomizable.Value == false) continue;
 
-                var labelList = new List<string>();
-                labelList.Add(attr.LogicalName);
+                var labelList = new List<string>
+                {
+                    attr.LogicalName
+                };
 
                 foreach (var displayName in attr.DisplayName.LocalizedLabels)
                 {
@@ -96,11 +102,13 @@ namespace Quick_Translator
 
             foreach (var formFieldMetadata in formFieldMetadataList)
             {
-                var labelList = new List<string>();
-                labelList.Add(formFieldMetadata.Form);
-                labelList.Add(formFieldMetadata.Tab);
-                labelList.Add(formFieldMetadata.Section);
-                labelList.Add(formFieldMetadata.Attribute);
+                var labelList = new List<string>
+                {
+                    formFieldMetadata.Form,
+                    formFieldMetadata.Tab,
+                    formFieldMetadata.Section,
+                    formFieldMetadata.Attribute
+                };
 
                 foreach (var formFieldNames in formFieldMetadata.Names)
                 {
@@ -123,8 +131,10 @@ namespace Quick_Translator
             int rowIndex = 0;
             foreach (var viewMetadata in viewMetadaList)
             {
-                var labelList = new List<string>();
-                labelList.Add(ViewTypeHelper.GetViewTypeByTypeCode(viewMetadata.Type));
+                var labelList = new List<string>
+                {
+                    ViewTypeHelper.GetViewTypeByTypeCode(viewMetadata.Type)
+                };
 
                 foreach (var viewNames in viewMetadata.Names)
                 {
@@ -151,8 +161,10 @@ namespace Quick_Translator
                 if (booleanAttributeMetadata.OptionSet?.IsGlobal ?? false)
                     continue;
 
-                var labelList = new List<string>();
-                labelList.Add(attribute.LogicalName);
+                var labelList = new List<string>
+                {
+                    attribute.LogicalName
+                };
 
                 foreach (var lcId in lcIdList)
                 {
@@ -222,8 +234,10 @@ namespace Quick_Translator
 
                 foreach (var option in optionSetMetadata.Options.OrderBy(o => o.Value))
                 {
-                    var labelList = new List<string>();
-                    labelList.Add(attribute.LogicalName);
+                    var labelList = new List<string>
+                    {
+                        attribute.LogicalName
+                    };
 
                     foreach (var lcId in lcIdList)
                     {
@@ -261,7 +275,7 @@ namespace Quick_Translator
             orgService.Update(setting);
         }
 
-        public static void PublishChangedAttributeTranslations(DataGridView dgv, List<int> updatedRowIndexes)
+        public static void PublishChangedAttributeTranslations(IOrganizationService orgService, DataGridView dgv, List<int> updatedRowIndexes)
         {
             var attributeMetadataList = GetChangedAttributeRows(dgv, updatedRowIndexes);
 
@@ -272,10 +286,21 @@ namespace Quick_Translator
                 {
                     continue;
                 }
+
+               RequestsHelper.AddRequest(new UpdateAttributeRequest
+                {
+                    Attribute = attributeMeatada,
+                    EntityName = attributeMeatada.EntityLogicalName,
+                    MergeLabels = true
+                });
+
+                RequestsHelper.ExecuteMultiple(orgService, attributeMetadataList.Count, false);
             }
+
+            RequestsHelper.ExecuteMultiple(orgService, attributeMetadataList.Count, true);
         }
 
-        public static void PublishChangedFormTranslations(DataGridView dgv, List<int> updatedRowIndexes)
+        public static void PublishChangedFormTranslations(IOrganizationService orgService, DataGridView dgv, List<int> updatedRowIndexes)
         {
             var locLabelsRequestList = GetChangedFormRows(dgv, updatedRowIndexes);
         }
@@ -381,7 +406,7 @@ namespace Quick_Translator
                     form = orgService.Retrieve("systemform", formId, new ColumnSet(new[] { "formxml" }));
                     formList.Add(form);
                 }
-                catch (Exception error) //lets not fail if the form is no more available in CRM
+                catch (Exception) //lets not fail if the form is no more available in CRM
                 {
                     //OnLog(new LogEventArgs($"{sheet.Name}: {formId}: {error.Message}"));
 

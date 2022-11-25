@@ -102,7 +102,7 @@ namespace Quick_Translator
             this.tsbClose.Name = "tsbClose";
             this.tsbClose.Size = new System.Drawing.Size(107, 24);
             this.tsbClose.Text = "Close this tool";
-            this.tsbClose.Click += new System.EventHandler(this.tsbClose_Click);
+            this.tsbClose.Click += new System.EventHandler(this.Close_Clicktsb);
             // 
             // tssSeparator1
             // 
@@ -116,7 +116,7 @@ namespace Quick_Translator
             this.tsbSavePublish.Name = "tsbSavePublish";
             this.tsbSavePublish.Size = new System.Drawing.Size(124, 24);
             this.tsbSavePublish.Text = "Save and Publish";
-            this.tsbSavePublish.Click += new System.EventHandler(this.tsbSavePublish_Click);
+            this.tsbSavePublish.Click += new System.EventHandler(this.SavePublish_Clicktsb);
             // 
             // cbCustomEntities
             // 
@@ -141,7 +141,7 @@ namespace Quick_Translator
             this.tbFind.Size = new System.Drawing.Size(231, 23);
             this.tbFind.TabIndex = 6;
             this.tbFind.WordWrap = false;
-            this.tbFind.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbFind_KeyUp);
+            this.tbFind.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Find_KeyUptb);
             // 
             // lblFind
             // 
@@ -181,7 +181,7 @@ namespace Quick_Translator
             this.btnLoadEntities.TabIndex = 10;
             this.btnLoadEntities.Text = "Load Entities";
             this.btnLoadEntities.UseVisualStyleBackColor = true;
-            this.btnLoadEntities.Click += new System.EventHandler(this.btnLoadEntities_Click);
+            this.btnLoadEntities.Click += new System.EventHandler(this.LoadEntities_Clickbtn);
             // 
             // cbDefaultEntities
             // 
@@ -212,7 +212,7 @@ namespace Quick_Translator
             this.lvEntities.TabStop = false;
             this.lvEntities.UseCompatibleStateImageBehavior = false;
             this.lvEntities.View = System.Windows.Forms.View.Details;
-            this.lvEntities.SelectedIndexChanged += new System.EventHandler(this.lvEntities_SelectedIndexChanged);
+            this.lvEntities.SelectedIndexChanged += new System.EventHandler(this.Entities_SelectedIndexChangedlv);
             // 
             // logicalName
             // 
@@ -251,8 +251,8 @@ namespace Quick_Translator
             this.tcSelectedEntityTabs.SelectedIndex = 0;
             this.tcSelectedEntityTabs.Size = new System.Drawing.Size(1453, 846);
             this.tcSelectedEntityTabs.TabIndex = 0;
-            this.tcSelectedEntityTabs.SelectedIndexChanged += new System.EventHandler(this.tcSelectedEntityTabs_TabIndexChanged);
-            this.tcSelectedEntityTabs.TabIndexChanged += new System.EventHandler(this.tcSelectedEntityTabs_TabIndexChanged);
+            this.tcSelectedEntityTabs.SelectedIndexChanged += new System.EventHandler(this.SelectedEntityTabs_TabIndexChangedtc);
+            this.tcSelectedEntityTabs.TabIndexChanged += new System.EventHandler(this.SelectedEntityTabs_TabIndexChangedtc);
             // 
             // tpAttributes
             // 
@@ -280,7 +280,7 @@ namespace Quick_Translator
             this.dgvAttributes.RowHeadersWidth = 51;
             this.dgvAttributes.Size = new System.Drawing.Size(1431, 801);
             this.dgvAttributes.TabIndex = 0;
-            this.dgvAttributes.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAttributes_CellValueChanged);
+            this.dgvAttributes.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.Attributes_CellValueChangeddgv);
             // 
             // attrLogicalName
             // 
@@ -314,7 +314,7 @@ namespace Quick_Translator
             this.dgvForms.RowHeadersWidth = 51;
             this.dgvForms.Size = new System.Drawing.Size(1431, 801);
             this.dgvForms.TabIndex = 0;
-            this.dgvForms.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvForms_CellValueChanged);
+            this.dgvForms.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.Forms_CellValueChangeddgv);
             // 
             // tpFormFields
             // 
@@ -345,7 +345,7 @@ namespace Quick_Translator
             this.dgvFormFields.RowHeadersWidth = 51;
             this.dgvFormFields.Size = new System.Drawing.Size(1438, 801);
             this.dgvFormFields.TabIndex = 0;
-            this.dgvFormFields.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvFormFields_CellValueChanged);
+            this.dgvFormFields.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.FormFields_CellValueChangeddgv);
             // 
             // formName
             // 
@@ -405,7 +405,7 @@ namespace Quick_Translator
             this.dgvViews.RowHeadersWidth = 51;
             this.dgvViews.Size = new System.Drawing.Size(1431, 801);
             this.dgvViews.TabIndex = 0;
-            this.dgvViews.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvViews_CellValueChanged);
+            this.dgvViews.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.Views_CellValueChangeddgv);
             // 
             // viewType
             // 
@@ -441,7 +441,7 @@ namespace Quick_Translator
             this.dgvBooleans.RowHeadersWidth = 51;
             this.dgvBooleans.Size = new System.Drawing.Size(1431, 801);
             this.dgvBooleans.TabIndex = 0;
-            this.dgvBooleans.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvBooleans_CellValueChanged);
+            this.dgvBooleans.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.Booleans_CellValueChangeddgv);
             // 
             // boolLogicalName
             // 
@@ -477,7 +477,7 @@ namespace Quick_Translator
             this.dgvPicklists.RowHeadersWidth = 51;
             this.dgvPicklists.Size = new System.Drawing.Size(1431, 801);
             this.dgvPicklists.TabIndex = 0;
-            this.dgvPicklists.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPicklists_CellValueChanged);
+            this.dgvPicklists.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.Picklists_CellValueChangeddgv);
             // 
             // picklistLogicalName
             // 

@@ -20,12 +20,12 @@ namespace Quick_Translator
         private List<int> lcIdList = new List<int>();
         private List<EntityMetadata> entityMetadataList;
 
-        private List<int> updatedAttributes = new List<int>();
-        private List<int> updatedForms = new List<int>();
-        private List<int> updatedFomFields = new List<int>();
-        private List<int> updatedViews = new List<int>();
-        private List<int> updatedBooleans = new List<int>();
-        private List<int> updatedOptionSets = new List<int>();
+        private readonly List<int> updatedAttributes = new List<int>();
+        private readonly List<int> updatedForms = new List<int>();
+        private readonly List<int> updatedFomFields = new List<int>();
+        private readonly List<int> updatedViews = new List<int>();
+        private readonly List<int> updatedBooleans = new List<int>();
+        private readonly List<int> updatedOptionSets = new List<int>();
 
         #endregion variables
 
@@ -37,18 +37,18 @@ namespace Quick_Translator
 
         #endregion Constructor
 
-        private void tsbClose_Click(object sender, EventArgs e)
+        private void Close_Clicktsb(object sender, EventArgs e)
         {
             CloseTool();
         }
 
-        private void tsbSavePublish_Click(object sender, EventArgs e)
+        private void SavePublish_Clicktsb(object sender, EventArgs e)
         {
             if (updatedAttributes.Any())
-                MainControlBusiness.PublishChangedAttributeTranslations(dgvAttributes, updatedAttributes);
+                MainControlBusiness.PublishChangedAttributeTranslations(Service,dgvAttributes, updatedAttributes);
 
             if (updatedForms.Any())
-                MainControlBusiness.PublishChangedFormTranslations(dgvForms, updatedForms);
+                MainControlBusiness.PublishChangedFormTranslations(Service, dgvForms, updatedForms);
 
             if (updatedFomFields.Any())
                 MainControlBusiness.PublishChangedFormFieldTranslations(Service, dgvFormFields, updatedFomFields);
@@ -56,11 +56,11 @@ namespace Quick_Translator
             if (updatedViews.Any())
                 MainControlBusiness.PublishChangedViewTranslations(Service, dgvViews, updatedViews);
 
-            if (updatedBooleans.Any())
-                MainControlBusiness.PublishChangedAttributeTranslations(dgvBooleans, updatedBooleans);
+            //if (updatedBooleans.Any())
+                //MainControlBusiness.PublishChangedBooleanTranslations(Service, dgvBooleans, updatedBooleans);
 
-            if (updatedOptionSets.Any())
-                MainControlBusiness.PublishChangedAttributeTranslations(dgvPicklists, updatedOptionSets);
+            //if (updatedOptionSets.Any())
+                //MainControlBusiness.PublishChangedIotionSetsTranslations(Service, dgvPicklists, updatedOptionSets);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Quick_Translator
             }
         }
 
-        private void btnLoadEntities_Click(object sender, EventArgs e)
+        private void LoadEntities_Clickbtn(object sender, EventArgs e)
         {
             LoadEntities();
         }
@@ -145,7 +145,7 @@ namespace Quick_Translator
             }
         }
 
-        private void tbFind_KeyUp(object sender, KeyEventArgs e)
+        private void Find_KeyUptb(object sender, KeyEventArgs e)
         {
             lvEntities.Items.Clear();
 
@@ -158,7 +158,7 @@ namespace Quick_Translator
             FillEntitiesListView(filteredList);
         }
 
-        private void lvEntities_SelectedIndexChanged(object sender, EventArgs e)
+        private void Entities_SelectedIndexChangedlv(object sender, EventArgs e)
         {
             if (lvEntities.SelectedIndices.Count <= 0) return;
 
@@ -183,7 +183,7 @@ namespace Quick_Translator
             LoadEntityMetada(true);
         }
 
-        private void tcSelectedEntityTabs_TabIndexChanged(object sender, EventArgs e)
+        private void SelectedEntityTabs_TabIndexChangedtc(object sender, EventArgs e)
         {
             LoadEntityMetada(false);
         }
@@ -272,7 +272,7 @@ namespace Quick_Translator
             MainControlBusiness.AddLanguageColumns(dgvPicklists, lcIds);
         }
 
-        private void dgvAttributes_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void Attributes_CellValueChangeddgv(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0 || updatedAttributes.Contains(e.RowIndex))
                 return;
@@ -280,7 +280,7 @@ namespace Quick_Translator
             updatedAttributes.Add(e.RowIndex);
         }
 
-        private void dgvForms_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void Forms_CellValueChangeddgv(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0 || updatedForms.Contains(e.RowIndex))
                 return;
@@ -288,7 +288,7 @@ namespace Quick_Translator
             updatedForms.Add(e.RowIndex);
         }
 
-        private void dgvFormFields_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void FormFields_CellValueChangeddgv(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0 || updatedFomFields.Contains(e.RowIndex))
                 return;
@@ -296,7 +296,7 @@ namespace Quick_Translator
             updatedFomFields.Add(e.RowIndex);
         }
 
-        private void dgvViews_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void Views_CellValueChangeddgv(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0 || updatedViews.Contains(e.RowIndex))
                 return;
@@ -304,7 +304,7 @@ namespace Quick_Translator
             updatedViews.Add(e.RowIndex);
         }
 
-        private void dgvBooleans_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void Booleans_CellValueChangeddgv(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0 || updatedBooleans.Contains(e.RowIndex))
                 return;
@@ -312,7 +312,7 @@ namespace Quick_Translator
             updatedBooleans.Add(e.RowIndex);
         }
 
-        private void dgvPicklists_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void Picklists_CellValueChangeddgv(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0 || updatedOptionSets.Contains(e.RowIndex))
                 return;
