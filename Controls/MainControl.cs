@@ -44,17 +44,17 @@ namespace Quick_Translator
 
         private void tsbSavePublish_Click(object sender, EventArgs e)
         {
-            if(updatedAttributes.Any())
+            if (updatedAttributes.Any())
                 MainControlBusiness.PublishChangedAttributeTranslations(dgvAttributes, updatedAttributes);
 
             if (updatedForms.Any())
                 MainControlBusiness.PublishChangedFormTranslations(dgvForms, updatedForms);
 
             if (updatedFomFields.Any())
-                MainControlBusiness.PublishChangedFormFieldTranslations(Service,dgvFormFields, updatedFomFields);
+                MainControlBusiness.PublishChangedFormFieldTranslations(Service, dgvFormFields, updatedFomFields);
 
             if (updatedViews.Any())
-                MainControlBusiness.PublishChangedAttributeTranslations(dgvViews, updatedViews);
+                MainControlBusiness.PublishChangedViewTranslations(Service, dgvViews, updatedViews);
 
             if (updatedBooleans.Any())
                 MainControlBusiness.PublishChangedAttributeTranslations(dgvBooleans, updatedBooleans);
@@ -274,7 +274,7 @@ namespace Quick_Translator
 
         private void dgvAttributes_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+            if (e.RowIndex < 0 || e.ColumnIndex < 0 || updatedAttributes.Contains(e.RowIndex))
                 return;
 
             updatedAttributes.Add(e.RowIndex);
@@ -282,7 +282,7 @@ namespace Quick_Translator
 
         private void dgvForms_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+            if (e.RowIndex < 0 || e.ColumnIndex < 0 || updatedForms.Contains(e.RowIndex))
                 return;
 
             updatedForms.Add(e.RowIndex);
@@ -290,7 +290,7 @@ namespace Quick_Translator
 
         private void dgvFormFields_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+            if (e.RowIndex < 0 || e.ColumnIndex < 0 || updatedFomFields.Contains(e.RowIndex))
                 return;
 
             updatedFomFields.Add(e.RowIndex);
@@ -298,7 +298,7 @@ namespace Quick_Translator
 
         private void dgvViews_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+            if (e.RowIndex < 0 || e.ColumnIndex < 0 || updatedViews.Contains(e.RowIndex))
                 return;
 
             updatedViews.Add(e.RowIndex);
@@ -306,7 +306,7 @@ namespace Quick_Translator
 
         private void dgvBooleans_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+            if (e.RowIndex < 0 || e.ColumnIndex < 0 || updatedBooleans.Contains(e.RowIndex))
                 return;
 
             updatedBooleans.Add(e.RowIndex);
@@ -314,7 +314,7 @@ namespace Quick_Translator
 
         private void dgvPicklists_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+            if (e.RowIndex < 0 || e.ColumnIndex < 0 || updatedOptionSets.Contains(e.RowIndex))
                 return;
 
             updatedOptionSets.Add(e.RowIndex);

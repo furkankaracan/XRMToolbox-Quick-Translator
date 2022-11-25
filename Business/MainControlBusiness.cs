@@ -263,7 +263,7 @@ namespace Quick_Translator
 
         public static void PublishChangedAttributeTranslations(DataGridView dgv, List<int> updatedRowIndexes)
         {
-            List<AttributeMetadata> attributeMetadataList = GetChangedAttributeRows(dgv, updatedRowIndexes);
+            var attributeMetadataList = GetChangedAttributeRows(dgv, updatedRowIndexes);
 
             foreach (var attributeMeatada in attributeMetadataList)
             {
@@ -277,12 +277,17 @@ namespace Quick_Translator
 
         public static void PublishChangedFormTranslations(DataGridView dgv, List<int> updatedRowIndexes)
         {
-            List<SetLocLabelsRequest> requests = GetChangedFormRows(dgv, updatedRowIndexes);
+            var locLabelsRequestList = GetChangedFormRows(dgv, updatedRowIndexes);
         }
 
         public static void PublishChangedFormFieldTranslations(IOrganizationService orgService, DataGridView dgv, List<int> updatedRowIndexes)
         {
-            GetChangedFormFields(orgService, dgv, updatedRowIndexes);
+            GetChangedFormFieldRows(orgService, dgv, updatedRowIndexes);
+        }
+
+        public static void PublishChangedViewTranslations(IOrganizationService orgService, DataGridView dgv, List<int> updatedRowIndexes)
+        {
+            var locLabelsRequestList = GetChangedViewRows(orgService, dgv, updatedRowIndexes);
         }
 
         public static List<AttributeMetadata> GetChangedAttributeRows(DataGridView dgv, List<int> updatedRowIndexes)
@@ -325,8 +330,8 @@ namespace Quick_Translator
 
         public static List<SetLocLabelsRequest> GetChangedFormRows(DataGridView dgv, List<int> updatedRowIndexes)
         {
-            var columnCount = dgv.Columns.Count;
             List<SetLocLabelsRequest> requests = new List<SetLocLabelsRequest>();
+            var columnCount = dgv.Columns.Count;
 
             foreach (var rowIndex in updatedRowIndexes)
             {
@@ -358,20 +363,23 @@ namespace Quick_Translator
             return requests;
         }
 
-        public static void GetChangedFormFields(IOrganizationService orgService, DataGridView dgv, List<int> updatedRowIndexes)
+        public static List<Entity> GetChangedFormFieldRows(IOrganizationService orgService, DataGridView dgv, List<int> updatedRowIndexes)
         {
+            List<Entity> formList = new List<Entity>();
+
             var columnCount = dgv.Columns.Count;
             foreach (var rowIndex in updatedRowIndexes)
             {
                 FormFieldMetadata tag = (FormFieldMetadata)dgv.Rows[rowIndex].Tag;
 
-                var labelId =  "{" + tag.Id.ToString() + "}";
+                var labelId = "{" + tag.Id.ToString() + "}";
                 var formId = tag.FormId;
 
                 Entity form = new Entity();
                 try
                 {
                     form = orgService.Retrieve("systemform", formId, new ColumnSet(new[] { "formxml" }));
+                    formList.Add(form);
                 }
                 catch (Exception error) //lets not fail if the form is no more available in CRM
                 {
@@ -401,6 +409,58 @@ namespace Quick_Translator
 
                 form["formxml"] = docXml.OuterXml;
             }
+            return formList;
+        }
+
+        public static List<SetLocLabelsRequest> GetChangedViewRows(IOrganizationService orgService, DataGridView dgv, List<int> updatedRowIndexes)
+        {
+            List<SetLocLabelsRequest> requests = new List<SetLocLabelsRequest>();
+            var columnCount = dgv.Columns.Count;
+
+            foreach (var rowIndex in updatedRowIndexes)
+            {
+                ViewMetadata tag = (ViewMetadata)dgv.Rows[rowIndex].Tag;
+                var currentViewId = tag.Id;
+
+                var locLabel = ((RetrieveLocLabelsResponse)orgService.Execute(new RetrieveLocLabelsRequest
+                {
+                    EntityMoniker = new EntityReference("savedquery", currentViewId),
+                    AttributeName = "name"
+                })).Label;
+
+                var labels = locLabel.LocalizedLabels.ToList();
+
+                var request = new SetLocLabelsRequest
+                {
+                    EntityMoniker = new EntityReference("savedquery", currentViewId),
+                    AttributeName = "name",
+                    Labels = locLabel.LocalizedLabels.ToArray()
+                };
+
+                int columnIndex = 1;
+                while (columnIndex < columnCount)
+                {
+                    var lcId = Convert.ToInt32(dgv.Columns[columnIndex].Name);
+                    var label = (string)dgv[columnIndex, rowIndex].Value;
+
+                    var translatedLabel = labels.FirstOrDefault(prm => prm.LanguageCode == lcId);
+                    if (translatedLabel == null)
+                    {
+                        translatedLabel = new LocalizedLabel(label, lcId);
+                        labels.Add(translatedLabel);
+                    }
+                    else
+                    {
+                        translatedLabel.Label = label;
+                    }
+
+                    columnIndex++;
+                }
+
+                requests.Add(request);
+            }
+
+            return requests;
         }
 
         private static void UpdateXmlNode(XmlNode node, string lcId, string description)
